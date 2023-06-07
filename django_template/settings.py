@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     # TODO change this link once you have hosted the server on PythonAnywhere
-    "socgroup2.pythonanywhere.com",
+    "<your-name>.pythonanywhere.com",
     "127.0.0.1",
 ]
 
