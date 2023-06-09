@@ -60,7 +60,7 @@ class Match(models.Model):
     
     # latitude and longitude of the place at which the match was first created
     createdAtLocation = models.OneToOneField(Location, default={41.84163, 9.78773},on_delete=models.CASCADE,)
-    createdAtTime = models.TimeField(auto_now=False, auto_now_add=False)
+    createdAtTime = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.time)
     #redundant: has_started = models.BooleanField(default=False)
     #redundant: is_over = models.BooleanField(default=False)
 
