@@ -57,7 +57,7 @@ class Match(models.Model):
     radius = models.FloatField(max_length=10)
     
     # latitude and longitude of the place at which the match was first created
-    createdAtLocation = models.OneToOneField(Location, on_delete=models.CASCADE(),)
+    createdAtLocation = models.OneToOneField(Location, on_delete=models.CASCADE,)
     createdAtTime = models.TimeField(auto_now=False, auto_now_add=False)
     #redundant: has_started = models.BooleanField(default=False)
     #redundant: is_over = models.BooleanField(default=False)
@@ -72,7 +72,7 @@ class Match(models.Model):
         return self.host.username
 
 class Clue(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE())
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player = models.OneToOneField(Player, on_delete=models.CASCADE,)
     #should we use the already defined location in Player model ???
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
@@ -83,7 +83,7 @@ class Object(models.Model):
         ("L", "Loot"),
     ]
 
-    match = models.ForeignKey(Match, on_delete=models.CASCADE())
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
     type = models.CharField(choices=OBJECT_TYPE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
 
