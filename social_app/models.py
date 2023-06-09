@@ -96,12 +96,12 @@ class Friendship(models.Model):
     player = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
-        related_name='friends',
+        related_name='friendFrom',
     )
     friend = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
-        related_name='followers',
+        related_name='friendTo',
     )
     class Meta:
         unique_together = ('player', 'friend')
@@ -112,12 +112,12 @@ class FriendshipRequest(models.Model):
     player = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
-        related_name='friends',
+        related_name='requesterFrom',
     )
     friend = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
-        related_name='followers',
+        related_name='requestedTo',
     )
 
     is_accepted = models.BooleanField()
