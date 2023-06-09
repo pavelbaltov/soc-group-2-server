@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 
 from .models import Player, Friendship, Match
 from django.contrib.auth import login, authenticate
@@ -62,15 +63,11 @@ def signup(request):
 # view functions: get_names, get_friends, add_friend,
 # helper functions: update_friendship_level, update_all_friendship_levels
 
-def get_names(request):
+def get_players(request):
     if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
-    response = '0:'
-    # Iterate through all players
-    for player in Player.objects.all():
-        response += f' {player.user.username}'
-    return HttpResponse(response)
-
+        return HttpResponse(f'User not signed in')
+    players = Player.objects.all()
+    return JsonResponse(list(players.values()), safe=False)
 
 def get_friends(request):
     if not request.user.is_authenticated:

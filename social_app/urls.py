@@ -13,7 +13,7 @@ urlpatterns = [
     path('get_scores/', views.get_scores),
     path('edit_score/', views.edit_score),
     path('get_friends/', views.get_friends),
-    path('get_names/', views.get_names),
+    path('get_players/', views.get_players),
     path('add_friend/', views.add_friend),
     path('get_match/', views.get_match),
     path('host_match/', views.host_match),
