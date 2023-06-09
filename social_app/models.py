@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.gis.db import models
 import datetime
 
 class Location(models.Model):
@@ -18,7 +17,7 @@ class Player(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
     location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE,)
@@ -40,23 +39,25 @@ class Match(models.Model):
         Player,
         on_delete=models.CASCADE,
         related_name='playerHost',
+        null=True
     )
     
     # password needed to access the hosted match
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=10, default="")
     
     players = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='playersInMatch',
+        null=True
     )
     
-    numberOfHunters = models.IntegerField()
-    numberOfHiders = models.IntegerField()
+    numberOfHunters = models.IntegerField(default=2)
+    numberOfHiders = models.IntegerField(default=4)
     
     # time(hour = 0, minute = 0, second = 0)
     duration = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.time)
-    radius = models.FloatField(max_length=10)
+    radius = models.FloatField(max_length=10, default=5)
     
     # latitude and longitude of the place at which the match was first created
     createdAtLocation = models.OneToOneField(Location, default={41.84163, 9.78773},on_delete=models.CASCADE,)
@@ -74,10 +75,10 @@ class Match(models.Model):
         return self.host.username
 
 class Clue(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    player = models.OneToOneField(Player, on_delete=models.CASCADE,)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
+    player = models.OneToOneField(Player, on_delete=models.CASCADE, null=True)
     #should we use the already defined location in Player model ???
-    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE)
+    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE)
 
 class Object(models.Model):
     OBJECT_TYPE = [
@@ -85,9 +86,9 @@ class Object(models.Model):
         ("L", "Loot"),
     ]
 
-    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=10, choices=OBJECT_TYPE)
-    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE)
+    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE)
 
 
 class Friendship(models.Model):

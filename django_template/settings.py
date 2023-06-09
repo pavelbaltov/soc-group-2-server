@@ -28,7 +28,6 @@ SECRET_KEY = 'CHANGE_ME'  # TODO change this key to some long, unique string
 # meaningless for you.
 DEBUG = True
 
-
 ALLOWED_HOSTS = [
     # TODO change this link once you have hosted the server on PythonAnywhere
     "socgroup2.pythonanywhere.com",
