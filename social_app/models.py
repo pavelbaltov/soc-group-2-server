@@ -18,7 +18,7 @@ class Player(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    role = models.CharField(choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
     location = models.OneToOneField(Location, on_delete=models.CASCADE,)
@@ -39,6 +39,7 @@ class Match(models.Model):
     host = models.OneToOneField(
         Player,
         on_delete=models.CASCADE,
+        related_name='playerHost',
     )
     
     # password needed to access the hosted match
@@ -47,6 +48,7 @@ class Match(models.Model):
     players = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
+        related_name='playersInMatch',
     )
     
     numberOfHunters = models.IntegerField()
@@ -84,7 +86,7 @@ class Object(models.Model):
     ]
 
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    type = models.CharField(choices=OBJECT_TYPE)
+    type = models.CharField(max_length=10, choices=OBJECT_TYPE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
 
 
