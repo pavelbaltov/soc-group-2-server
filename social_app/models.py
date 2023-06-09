@@ -21,7 +21,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
-    location = models.OneToOneField(Location, on_delete=models.CASCADE,)
+    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE,)
 
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
@@ -55,7 +55,7 @@ class Match(models.Model):
     numberOfHiders = models.IntegerField()
     
     # time(hour = 0, minute = 0, second = 0)
-    duration = models.TimeField(auto_now=False, auto_now_add=False)
+    duration = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.time)
     radius = models.FloatField(max_length=10)
     
     # latitude and longitude of the place at which the match was first created
@@ -77,7 +77,7 @@ class Clue(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     player = models.OneToOneField(Player, on_delete=models.CASCADE,)
     #should we use the already defined location in Player model ???
-    location = models.OneToOneField(Location, on_delete=models.CASCADE)
+    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE)
 
 class Object(models.Model):
     OBJECT_TYPE = [
@@ -87,7 +87,7 @@ class Object(models.Model):
 
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=OBJECT_TYPE)
-    location = models.OneToOneField(Location, on_delete=models.CASCADE)
+    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE)
 
 
 class Friendship(models.Model):
