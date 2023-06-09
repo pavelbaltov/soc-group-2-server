@@ -20,7 +20,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
-    location = models.OneToOneField(Location, default={41.84163, 9.78773}, on_delete=models.CASCADE,)
+    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE,)
 
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
@@ -56,12 +56,12 @@ class Match(models.Model):
     numberOfHiders = models.IntegerField(default=4)
     
     # time(hour = 0, minute = 0, second = 0)
-    duration = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.time)
+    duration = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     radius = models.FloatField(max_length=10, default=5)
     
     # latitude and longitude of the place at which the match was first created
-    createdAtLocation = models.OneToOneField(Location, default={41.84163, 9.78773},on_delete=models.CASCADE,)
-    createdAtTime = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.time)
+    createdAtLocation = models.OneToOneField(Location, null=True,on_delete=models.CASCADE,)
+    createdAtTime = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     #redundant: has_started = models.BooleanField(default=False)
     #redundant: is_over = models.BooleanField(default=False)
 
