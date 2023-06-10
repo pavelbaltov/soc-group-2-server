@@ -100,9 +100,10 @@ def get_players_nearby(request):
             "id": player.user.id,
             "role": player.role,
             "latitude": player.location.y,
-            "longitude": player.location.x
+            "longitude": player.location.x,
+            "distance": distance(current_location, player.location).kilometers
         }
-        for player in Player.objects.all() if distance(current_location, player.location).kilometers < radius
+        for player in Player.objects.all()
     ]
 
     return JsonResponse(players, safe=False)
