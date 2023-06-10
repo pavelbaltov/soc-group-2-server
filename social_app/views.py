@@ -72,6 +72,7 @@ def get_players(request):
     players = [
         {
             "id": player.user.id,
+            "username": player.user.username,
             "role": player.role,
             "latitude": player.location.y,
             "longitude": player.location.x
@@ -82,9 +83,10 @@ def get_players(request):
     return JsonResponse(players, safe=False)
 
 def get_players_nearby(request):
-    #Commented for testing purposes
+    # Commented for testing purposes
     # if not request.user.is_authenticated:
     #       return HttpResponse(f'User not signed in')
+
     data = json.loads(request.body)
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
@@ -98,6 +100,7 @@ def get_players_nearby(request):
     players = [
         {
             "id": player.user.id,
+            "username": player.user.username,
             "role": player.role,
             "latitude": player.location.y,
             "longitude": player.location.x
@@ -108,21 +111,27 @@ def get_players_nearby(request):
     return JsonResponse(players, safe=False)
 
 def get_friends(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
+    # Commented for testing purposes
+    #if not request.user.is_authenticated:
+    #   return HttpResponse(f'user not signed in')
     if not hasattr(request.user, 'player'):
         return HttpResponse(f'user is not a player')
-    response = '0: '
-    # Iterate through all the friendships of that player. Note that only the
-    # players friends are displayed, not the followers (players that
-    # friended the player without the player friending them back).
-    for friendship in request.user.player.friends.all():
-        response += f'{friendship.friend.user.username}' \
-                    f' {friendship.level},'
-    # This just removes the trailing comma left by the above iteration
-    response = response[:-1]
-    return HttpResponse(response)
-
+    friends = []
+    data = json.loads(request.body)
+    for p in Player.objects.all():
+        if p.user.username == data['username']:
+            friends = [
+                {
+                    "id": friend.user.id,
+                    "username": friend.user.username,
+                    "role": friend.role,
+                    "latitude": friend.location.y,
+                    "longitude": friend.location.x
+                }
+                for friend in p.user.player.get_friends()
+            ]
+            break
+    return JsonResponse(friends, safe=False)
 
 def add_friend(request):
     if not request.user.is_authenticated:
