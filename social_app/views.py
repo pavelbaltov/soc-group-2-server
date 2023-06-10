@@ -158,14 +158,14 @@ def send_friendship_request(request):
     #check if such players exists
 
     existing_request = FriendshipRequest.objects.filter(
-        player=requester.player, friend=recipient.player
+        requester=requester.player, recipient=recipient.player
     ).exists()
 
     if existing_request:
         return HttpResponse("0: Friendship request already sent", status=400)
 
     # Create a new friendship request
-    frRe = FriendshipRequest(player=requester.player, friend=recipient.player)
+    frRe = FriendshipRequest(requester=requester.player, recipient=recipient.player)
     frRe.save()
 
     return HttpResponse("1: Friendship request sent successfully", status=200)
