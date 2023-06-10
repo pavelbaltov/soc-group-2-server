@@ -21,7 +21,7 @@ class Player(models.Model):
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
     def get_friends(self):
-        return Friendship.objects.filter(player=self.user.username)
+        return Friendship.objects.filter(player=self.user.id)
 
     def __str__(self):
         return self.user.username
