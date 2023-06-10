@@ -66,8 +66,9 @@ def signup(request):
 # helper functions: update_friendship_level, update_all_friendship_levels
 
 def get_players(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'User not signed in')
+    #Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #     return HttpResponse(f'User not signed in')
     players = [
         {
             "id": player.user.id,
@@ -81,8 +82,9 @@ def get_players(request):
     return JsonResponse(players, safe=False)
 
 def get_players_nearby(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'User not signed in')
+    #Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #     return HttpResponse(f'User not signed in')
 
     data = json.loads(request.body)
     latitude = data.get('latitude')
