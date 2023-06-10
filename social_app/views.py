@@ -3,7 +3,7 @@ import json
 from django.contrib.gis.geos import Point
 from django.http import HttpResponse, JsonResponse
 
-from .models import Player, Friendship, Match
+from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
@@ -116,22 +116,30 @@ def get_friends(request):
     #   return HttpResponse(f'user not signed in')
     #if not hasattr(request.user, 'player'):
     #    return HttpResponse(f'user is not a player')
-    friends = []
-    data = json.loads(request.body)
-    for p in Player.objects.all():
-        if p.user.username == data['username']:
-            friends = [
-                {
-                    "id": friend.user.id,
-                    "username": friend.user.username,
-                    "role": friend.role,
-                    "latitude": friend.location.y,
-                    "longitude": friend.location.x
-                }
-                for friend in p.user.player.get_friends()
-            ]
-            break
+
+    friends = [
+        {
+            "id": friend.user.id,
+            "username": friend.user.username,
+            "role": friend.role,
+            "latitude": friend.location.y,
+            "longitude": friend.location.x
+        }
+        for friend in request.user.player.get_friends()
+    ]
+
     return JsonResponse(friends, safe=False)
+
+def send_friendship_request(request):
+    
+    data = json.loads(request.body)
+    from_user_id = int(data['from_user'])
+    to_user_id = int(data['to_user'])
+
+    #check if such players exists
+
+    frRe = FriendshipRequest(player=from_user_id, friend=to_user_id)
+    frRe.save()
 
 def add_friend(request):
     if not request.user.is_authenticated:
