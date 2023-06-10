@@ -127,8 +127,6 @@ class FriendshipRequest(models.Model):
         related_name='requestedTo',
     )
 
-    is_accepted = models.BooleanField()
-
     # accepts the friendship request and creates a new Friendship object and
     # deletes the current Friendship request
     def accept(self):
