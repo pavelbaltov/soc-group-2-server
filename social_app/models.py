@@ -132,7 +132,7 @@ class FriendshipRequest(models.Model):
     # accepts the friendship request and creates a new Friendship object and
     # deletes the current Friendship request
     def accept(self):
-        acceptedFriendship = Friendship(player=self.player, friend=self.friend)
+        acceptedFriendship = Friendship(player=self.requester, friend=self.recipient)
         acceptedFriendship.save()
         self.delete()
 
