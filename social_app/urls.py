@@ -10,12 +10,16 @@ urlpatterns = [
     path('login/', views.signin),
     path('logout/', views.signout),
     path('check_auth/', views.check_auth),
-    path('get_friends/', views.get_friends),
+
     path('get_players/', views.get_players),
     path('get_players_nearby/', views.get_players_nearby),
+
+    path('get_friends/', views.get_friends),
     path('send_friendship_request/', views.send_friendship_request),
     path('respond_friendship_request/', views.respond_friendship_request),
     path('get_friendship_requests/', views.get_friendship_requests),
+    path('remove_friend/', views.remove_friend),
+
     path('update_location/', views.update_location),
     path('get_match/', views.get_match),
     path('host_match/', views.host_match),

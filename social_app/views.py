@@ -109,13 +109,15 @@ def get_players_nearby(request):
     return JsonResponse(players, safe=False)
 
 def update_location(request):
+    # Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #       return HttpResponse(f'User not signed in')
+
     data = json.loads(request.body)
-    username = data['username']
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
 
-    user = User.objects.get(username=username)
-    player = user.player
+    player = request.user.player
     player.location = Point(longitude, latitude)
     player.save()
 
@@ -147,9 +149,10 @@ def send_friendship_request(request):
     #    return HttpResponse(f'user is not a player')
 
     data = json.loads(request.body)
+    from_user_id = data['from_user']
     to_user_id = data['to_user']
 
-    requester = request.user
+    requester = User.objects.get(id=from_user_id)
     recipient = User.objects.get(id=to_user_id)
 
     #check if such players exists
@@ -212,6 +215,18 @@ def get_friendship_requests(request):
         for request in request.user.player.get_requests()
     ]
     return requests
+
+def remove_friend(request):
+
+    data = json.loads(request.body)
+    friend_to_remove = data['friend_to_remove']
+
+    friend = Player.objects.get(id=friend_to_remove)
+    friendship = Friendship.objects.get(player=request.user.player, friend=friend)
+    friendship.delete()
+
+    return HttpResponse("1: Successfully removed this friend")
+
 
 # TILTBALL: host_match, join_match, get_match, pass_ball, end_match
 
