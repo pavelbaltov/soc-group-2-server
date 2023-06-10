@@ -119,6 +119,7 @@ def update_location(request):
     player.location = Point(latitude, longitude)
     player.save()
 
+    return HttpResponse("1: Successfully updated location!")
 
 def get_friends(request):
     # Commented for testing purposes
