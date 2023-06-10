@@ -132,12 +132,16 @@ def get_friends(request):
     return JsonResponse(friends, safe=False)
 
 def send_friendship_request(request):
+    # Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #   return HttpResponse(f'user not signed in')
+    # if not hasattr(request.user, 'player'):
+    #    return HttpResponse(f'user is not a player')
 
     data = json.loads(request.body)
-    from_user_id = data['from_user']
     to_user_id = data['to_user']
 
-    requester = User.objects.get(username=from_user_id)
+    requester = request.user
     recipient = User.objects.get(username=to_user_id)
 
     #check if such players exists
@@ -147,37 +151,41 @@ def send_friendship_request(request):
     ).exists()
 
     if existing_request:
-        return JsonResponse({'error': 'Friendship request already sent'}, status=400)
+        return JsonResponse({'0': 'Friendship request already sent'}, status=400)
 
     # Create a new friendship request
     frRe = FriendshipRequest(player=requester.player, friend=recipient.player,is_accepted = False)
     frRe.save()
 
-    return JsonResponse({'message': 'Friendship request sent successfully'})
+    return JsonResponse({'1': 'Friendship request sent successfully'})
 
-def add_friend(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
-    if request.method != 'POST':
-        return HttpResponse(f'incorrect request method.')
-    if not hasattr(request.user, 'player'):
-        return HttpResponse(f'user is not a player')
+def respond_friendship_request(request):
+    # Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #   return HttpResponse(f'user not signed in')
+    # if not hasattr(request.user, 'player'):
+    #    return HttpResponse(f'user is not a player')
 
-    player = request.user.player
-    name = request.POST['name']
-    # Keyword attributes are very powerful. Look at the Django documentation
-    # for more details. This line fetches the player that has a user that
-    # has a username that equals name. The __ is equivalent to a dot.
-    # user.username in regular code becomes the user__username parameter of
-    # the get function.
-    friend = Player.objects.get(user__username=name)
+    data = json.loads(request.body)
+    from_user = data['from_user']
+    to_user_id = data['to_user']
+    response = data['response']
 
-    # This line creates that friendship and immediately saves it
-    Friendship(player=player, friend=friend).save()
-    update_all_friendship_levels()
+    requester = User.objects.get(username=from_user)
+    recipient = User.objects.get(username=to_user_id)
 
-    response = f'0: {request.user.username} befriended {name}'
-    return HttpResponse(response)
+    existing_request = FriendshipRequest.objects.filter(
+        player=requester.player, friend=recipient.player
+    ).exists()
+
+    if not existing_request:
+        return JsonResponse({'0': 'Friendship request doesn\'t exist'}, status=400)
+
+    frRe = FriendshipRequest.objects.get(player=requester.player, friend=recipient.player)
+    if response:
+        frRe.accept()
+    else:
+        frRe.decline()
 
 
 def update_friendship_level(friendship):
