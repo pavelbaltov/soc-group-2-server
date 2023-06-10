@@ -85,11 +85,10 @@ def get_players_nearby(request):
     #Commented for testing purposes
     # if not request.user.is_authenticated:
     #       return HttpResponse(f'User not signed in')
-    body_unicode = request.body.decode('utf-8')
-    data = json.loads(body_unicode)
-    latitude = data[0]
-    longitude = data[1]
-    radius = data[2]
+    data = json.loads(request.body)
+    latitude = data['latitude']
+    longitude = data['longitude']
+    radius = data['radius']
 
     if latitude is None or longitude is None or radius is None:
         return JsonResponse({'error': 'Missing required fields'}, status=400)
