@@ -114,8 +114,8 @@ def get_friends(request):
     # Commented for testing purposes
     #if not request.user.is_authenticated:
     #   return HttpResponse(f'user not signed in')
-    if not hasattr(request.user, 'player'):
-        return HttpResponse(f'user is not a player')
+    #if not hasattr(request.user, 'player'):
+    #    return HttpResponse(f'user is not a player')
     friends = []
     data = json.loads(request.body)
     for p in Player.objects.all():
