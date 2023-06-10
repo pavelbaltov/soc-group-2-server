@@ -93,7 +93,7 @@ def get_players_nearby(request):
     if latitude is None or longitude is None or radius is None:
         return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-    current_location = Point(longitude, latitude)
+    current_location = Point(float(longitude), float(latitude))
 
     players = [
         {
