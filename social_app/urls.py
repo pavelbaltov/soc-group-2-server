@@ -10,8 +10,6 @@ urlpatterns = [
     path('login/', views.signin),
     path('logout/', views.signout),
     path('check_auth/', views.check_auth),
-    path('get_scores/', views.get_scores),
-    path('edit_score/', views.edit_score),
     path('get_friends/', views.get_friends),
     path('get_players/', views.get_players),
     path('get_players_nearby/', views.get_players_nearby),
