@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
 from django.http import HttpResponse, JsonResponse
 
@@ -131,14 +132,17 @@ def get_friends(request):
     return JsonResponse(friends, safe=False)
 
 def send_friendship_request(request):
-    
+
     data = json.loads(request.body)
-    from_user_id = int(data['from_user'])
-    to_user_id = int(data['to_user'])
+    from_user_id = data['from_user']
+    to_user_id = data['to_user']
+
+    requester = User.objects.get(username=from_user_id)
+    recipient = User.objects.get(username=to_user_id)
 
     #check if such players exists
 
-    frRe = FriendshipRequest(player=from_user_id, friend=to_user_id)
+    frRe = FriendshipRequest(player=requester.player, friend=recipient.player)
     frRe.save()
 
 def add_friend(request):
