@@ -116,12 +116,12 @@ class Friendship(models.Model):
 
 
 class FriendshipRequest(models.Model):
-    player = models.ForeignKey(
+    requester = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='requesterFrom',
     )
-    friend = models.ForeignKey(
+    recipient = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='requestedTo',
@@ -143,7 +143,7 @@ class FriendshipRequest(models.Model):
     # Meta - additional options for this model
     # ensures that all pairs are unique!
     class Meta:
-        unique_together = ('player', 'friend')
+        unique_together = ('requester', 'recipient')
 
     def __str__(self):
         return f'Request: {self.player.user.username} -> {self.friend.user.username}'
