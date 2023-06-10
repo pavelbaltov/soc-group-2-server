@@ -169,7 +169,7 @@ def respond_friendship_request(request):
     data = json.loads(request.body)
     from_user = data['from_user']
     to_user_id = data['to_user']
-    response = data['response']
+    response = bool(data['response'])
 
     requester = User.objects.get(username=from_user)
     recipient = User.objects.get(username=to_user_id)
