@@ -114,7 +114,8 @@ def update_location(request):
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
 
-    player = Player.objects.get(username=username)
+    user = User.objects.get(username=username)
+    player = user.player
     player.location = Point(latitude, longitude)
     player.save()
 
