@@ -14,6 +14,8 @@ urlpatterns = [
     path('edit_score/', views.edit_score),
     path('get_friends/', views.get_friends),
     path('get_players/', views.get_players),
+    path('get_players_nearby/', views.get_players_nearby),
+
     path('add_friend/', views.add_friend),
     path('get_match/', views.get_match),
     path('host_match/', views.host_match),

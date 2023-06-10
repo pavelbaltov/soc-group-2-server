@@ -1,11 +1,13 @@
-from django.http import HttpResponse
-from django.http import JsonResponse
+import json
+
+from django.contrib.gis.geos import Point
+from django.http import HttpResponse, JsonResponse
 
 from .models import Player, Friendship, Match
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
+from geopy.distance import distance
 
-from django.contrib.auth import logout
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
 
@@ -66,8 +68,43 @@ def signup(request):
 def get_players(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
-    players = Player.objects.all()
-    return JsonResponse(list(players.values()), safe=False)
+    players = [
+        {
+            "id": player.user.id,
+            "role": player.role,
+            "latitude": player.location.y,
+            "longitude": player.location.x
+        }
+        for player in Player.objects.all()
+    ]
+
+    return JsonResponse(players, safe=False)
+
+def get_players_nearby(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in')
+
+    data = json.loads(request.body)
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    radius = data.get('radius')
+
+    if latitude is None or longitude is None or radius is None:
+        return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+    current_location = Point(longitude, latitude)
+
+    players = [
+        {
+            "id": player.user.id,
+            "role": player.role,
+            "latitude": player.location.y,
+            "longitude": player.location.x
+        }
+        for player in Player.objects.all() if distance(current_location, player.location).kilometers < radius
+    ]
+
+    return JsonResponse(players, safe=False)
 
 def get_friends(request):
     if not request.user.is_authenticated:

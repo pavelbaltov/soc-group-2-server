@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.gis.db import models
 import datetime
-
-class Location(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
 
 class Player(models.Model):
     ROLE_CHOICES = [
@@ -20,8 +17,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
-    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE,)
-
+    location = models.PointField(null=True)
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
     def get_friends(self):
@@ -41,44 +37,47 @@ class Match(models.Model):
         related_name='playerHost',
         null=True
     )
-    
+
     # password needed to access the hosted match
     password = models.CharField(max_length=10, default="")
-    
+
     players = models.ForeignKey(
         Player,
         on_delete=models.CASCADE,
         related_name='playersInMatch',
         null=True
     )
-    
+
     numberOfHunters = models.IntegerField(default=2)
     numberOfHiders = models.IntegerField(default=4)
-    
+
     # time(hour = 0, minute = 0, second = 0)
     duration = models.TimeField(auto_now=False, auto_now_add=False, null=True)
     radius = models.FloatField(max_length=10, default=5)
-    
+
     # latitude and longitude of the place at which the match was first created
-    createdAtLocation = models.OneToOneField(Location, null=True,on_delete=models.CASCADE,)
+    createdAtLocation = models.PointField(null=True)
     createdAtTime = models.TimeField(auto_now=False, auto_now_add=False, null=True)
-    #redundant: has_started = models.BooleanField(default=False)
-    #redundant: is_over = models.BooleanField(default=False)
+
+    # redundant: has_started = models.BooleanField(default=False)
+    # redundant: is_over = models.BooleanField(default=False)
 
     def hasStarted(self):
         if datetime.now() > self.createdAtTime:
-           return True
+            return True
         else:
             return False
 
     def __str__(self):
         return self.host.username
 
+
 class Clue(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
     player = models.OneToOneField(Player, on_delete=models.CASCADE, null=True)
-    #should we use the already defined location in Player model ???
-    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE)
+    # should we use the already defined location in Player model ???
+    location = models.PointField(null=True)
+
 
 class Object(models.Model):
     OBJECT_TYPE = [
@@ -88,7 +87,7 @@ class Object(models.Model):
 
     match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=10, choices=OBJECT_TYPE)
-    location = models.OneToOneField(Location, null=True, on_delete=models.CASCADE)
+    location = models.PointField(null=True)
 
 
 class Friendship(models.Model):
@@ -106,10 +105,13 @@ class Friendship(models.Model):
         on_delete=models.CASCADE,
         related_name='friendTo',
     )
+
     class Meta:
         unique_together = ('player', 'friend')
+
     def __str__(self):
         return f'{self.player.user.username} -> {self.friend.user.username}'
+
 
 class FriendshipRequest(models.Model):
     player = models.ForeignKey(
@@ -140,3 +142,6 @@ class FriendshipRequest(models.Model):
     # ensures that all pairs are unique!
     class Meta:
         unique_together = ('player', 'friend')
+
+    def __str__(self):
+        return f'Request: {self.player.user.username} -> {self.friend.user.username}'
