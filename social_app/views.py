@@ -175,17 +175,19 @@ def respond_friendship_request(request):
     recipient = User.objects.get(username=to_user_id)
 
     existing_request = FriendshipRequest.objects.filter(
-        player=requester.player, friend=recipient.player
+        requester=requester.player, recipient=recipient.player
     ).exists()
 
     if not existing_request:
-        return JsonResponse({'0': 'Friendship request doesn\'t exist'}, status=400)
+        return HttpResponse("0: Friendship request doesn\'t exist", status=400)
 
-    frRe = FriendshipRequest.objects.get(player=requester.player, friend=recipient.player)
+    frRe = FriendshipRequest.objects.get(requester=requester.player, recipient=recipient.player)
     if response:
         frRe.accept()
+        return HttpResponse("1: Friendship request accepted successfully", status=200)
     else:
         frRe.decline()
+        return HttpResponse("1: Friendship request declined successfully", status=200)
 
 
 def update_friendship_level(friendship):
