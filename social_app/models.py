@@ -149,4 +149,4 @@ class FriendshipRequest(models.Model):
         unique_together = ('requester', 'recipient')
 
     def __str__(self):
-        return f'Request: {self.player.user.username} -> {self.friend.user.username}'
+        return f'Request: {self.requester.user.username} -> {self.recipient.user.username}'
