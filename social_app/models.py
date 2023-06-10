@@ -25,6 +25,11 @@ class Player(models.Model):
         friends = [f.friend for f in friendships]
         return friends
 
+    def get_requests(self):
+        friendship_requests = FriendshipRequest.objects.filter(recipient=self.user.id)
+        requests = [r.recipient for r in friendship_requests]
+        return requests
+
     def __str__(self):
         return self.user.username
 
@@ -126,8 +131,6 @@ class FriendshipRequest(models.Model):
         on_delete=models.CASCADE,
         related_name='requestedTo',
     )
-
-    is_accepted = models.BooleanField()
 
     # accepts the friendship request and creates a new Friendship object and
     # deletes the current Friendship request

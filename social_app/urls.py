@@ -17,7 +17,8 @@ urlpatterns = [
     path('get_players_nearby/', views.get_players_nearby),
     path('send_friendship_request/', views.send_friendship_request),
     path('respond_friendship_request/', views.respond_friendship_request),
-
+    path('get_friendship_requests/', views.get_friendship_requests),
+    path('update_location/', views.update_location),
     path('get_match/', views.get_match),
     path('host_match/', views.host_match),
     path('join_match/', views.join_match),

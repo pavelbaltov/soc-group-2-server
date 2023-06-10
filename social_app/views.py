@@ -74,7 +74,6 @@ def get_players(request):
         {
             "id": player.user.id,
             "username": player.user.username,
-            "role": player.role,
             "latitude": player.location.y,
             "longitude": player.location.x
         }
@@ -94,7 +93,7 @@ def get_players_nearby(request):
     radius = float(data['radius'])
 
     if latitude is None or longitude is None or radius is None:
-        return JsonResponse({'error': 'Missing required fields'}, status=400)
+        return HttpResponse("0: Missing required fields'}", status=400)
 
     current_location = Point(longitude, latitude)
 
@@ -102,14 +101,23 @@ def get_players_nearby(request):
         {
             "id": player.user.id,
             "username": player.user.username,
-            "role": player.role,
             "latitude": player.location.y,
             "longitude": player.location.x
         }
         for player in Player.objects.all() if distance(current_location, player.location).kilometers < radius
     ]
-
     return JsonResponse(players, safe=False)
+
+def update_location(request):
+    data = json.loads(request.body)
+    username = data['username']
+    latitude = float(data['latitude'])
+    longitude = float(data['longitude'])
+
+    player = Player.objects.get(username=username)
+    player.location = Point(latitude, longitude)
+    player.save()
+
 
 def get_friends(request):
     # Commented for testing purposes
@@ -122,13 +130,11 @@ def get_friends(request):
         {
             "id": friend.user.id,
             "username": friend.user.username,
-            "role": friend.role,
             "latitude": friend.location.y,
             "longitude": friend.location.x
         }
         for friend in request.user.player.get_friends()
     ]
-
     return JsonResponse(friends, safe=False)
 
 def send_friendship_request(request):
@@ -142,7 +148,7 @@ def send_friendship_request(request):
     to_user_id = data['to_user']
 
     requester = request.user
-    recipient = User.objects.get(username=to_user_id)
+    recipient = User.objects.get(id=to_user_id)
 
     #check if such players exists
 
@@ -151,13 +157,13 @@ def send_friendship_request(request):
     ).exists()
 
     if existing_request:
-        return JsonResponse({'0': 'Friendship request already sent'}, status=400)
+        return HttpResponse("0: Friendship request already sent", status=400)
 
     # Create a new friendship request
-    frRe = FriendshipRequest(player=requester.player, friend=recipient.player,is_accepted = False)
+    frRe = FriendshipRequest(player=requester.player, friend=recipient.player)
     frRe.save()
 
-    return JsonResponse({'1': 'Friendship request sent successfully'})
+    return HttpResponse("1: Friendship request sent successfully", status=200)
 
 def respond_friendship_request(request):
     # Commented for testing purposes
@@ -167,12 +173,12 @@ def respond_friendship_request(request):
     #    return HttpResponse(f'user is not a player')
 
     data = json.loads(request.body)
-    from_user = data['from_user']
+
     to_user_id = data['to_user']
     response = bool(data['response'])
 
-    requester = User.objects.get(username=from_user)
-    recipient = User.objects.get(username=to_user_id)
+    requester = request.user
+    recipient = User.objects.get(id=to_user_id)
 
     existing_request = FriendshipRequest.objects.filter(
         requester=requester.player, recipient=recipient.player
@@ -189,54 +195,21 @@ def respond_friendship_request(request):
         frRe.decline()
         return HttpResponse("1: Friendship request declined successfully", status=200)
 
+def get_friendship_requests(request):
+    # Commented for testing purposes
+    # if not request.user.is_authenticated:
+    #   return HttpResponse(f'user not signed in')
 
-def update_friendship_level(friendship):
-    # This function basically counts mutual friends. Don't worry about the
-    # specifics, just write your own code for whatever network calculations
-    # you want to include in your game. If you are lost, the Django
-    # documentation is very helpful.
-    level = 0
-    for f in friendship.player.friends.all():
-        level += f.friend.followers.filter(player=friendship.friend).count()
-    friendship.level = level
-    friendship.save()
-
-
-def update_all_friendship_levels():
-    for friendship in Friendship.objects.all():
-        update_friendship_level(friendship)
-
-
-# LEADERBOARD: get_scores, edit_score
-
-def get_scores(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
-    response = '0: '
-    # Iterates over all players
-    for player in Player.objects.all():
-        # Remember you can't do player.username because the player does not
-        # have a username, only the player's user.
-        response += f'{player.user.username} {player.score},'
-    # Removes the trailing comma left by the above iteration
-    response = response[:-1]
-    return HttpResponse(response)
-
-
-def edit_score(request):
-    if not request.user.is_authenticated:
-        return HttpResponse('user not signed in')
-    if request.method != 'POST':
-        return HttpResponse('incorrect request method')
-    # Get the score
-    score = request.POST['score']
-    # Change the player's score
-    request.user.player.score = int(score)
-    # Save that change
-    request.user.player.save()
-    response = f'0: changed the score of {request.user.username} to {score}'
-    return HttpResponse(response)
-
+    requests = [
+        {
+            "id": request.user.id,
+            "username": request.user.username,
+            "latitude": request.location.y,
+            "longitude": request.location.x
+        }
+        for request in request.user.player.get_requests()
+    ]
+    return requests
 
 # TILTBALL: host_match, join_match, get_match, pass_ball, end_match
 
