@@ -116,7 +116,7 @@ def update_location(request):
 
     user = User.objects.get(username=username)
     player = user.player
-    player.location = Point(latitude, longitude)
+    player.location = Point(longitude, latitude)
     player.save()
 
     return HttpResponse("1: Successfully updated location!")
