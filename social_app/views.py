@@ -150,7 +150,7 @@ def send_friendship_request(request):
         return JsonResponse({'error': 'Friendship request already sent'}, status=400)
 
     # Create a new friendship request
-    frRe = FriendshipRequest(player=requester.player, friend=recipient.player)
+    frRe = FriendshipRequest(player=requester.player, friend=recipient.player,is_accepted = False)
     frRe.save()
 
     return JsonResponse({'message': 'Friendship request sent successfully'})
