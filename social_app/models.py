@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 import datetime
@@ -21,8 +22,9 @@ class Player(models.Model):
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
     def get_friends(self):
-        friendships = Friendship.objects.filter(player=self.user.id)
-        friends = [f.friend for f in friendships]
+        friendships = Friendship.objects.filter(Q(player=self) | Q(friend=self))
+        friends = [f.player for f in friendships if f.player is not self]
+        friends += [f.friend for f in friendships if f.friend is not self]
         return friends
 
     def get_requests(self):
@@ -150,3 +152,4 @@ class FriendshipRequest(models.Model):
 
     def __str__(self):
         return f'Request: {self.requester.user.username} -> {self.recipient.user.username}'
+
