@@ -23,8 +23,8 @@ class Player(models.Model):
     # i.e. returns the friendships of a player
     def get_friends(self):
         friendships = Friendship.objects.filter(Q(player=self) | Q(friend=self))
-        friends = [f.player for f in friendships if f.player.id != self.id]
-        friends += [f.friend for f in friendships if f.friend.id != self.id]
+        friends = [f.player for f in friendships if f.player.user.id != self.user.id]
+        friends += [f.friend for f in friendships if f.friend.user.id != self.user.id]
         return friends
 
     def get_requests(self):
