@@ -67,9 +67,8 @@ def signup(request):
 # helper functions: update_friendship_level, update_all_friendship_levels
 
 def get_players(request):
-    #Commented for testing purposes
-    # if not request.user.is_authenticated:
-    #     return HttpResponse(f'User not signed in')
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in')
     players = [
         {
             "id": player.user.id,
@@ -83,9 +82,8 @@ def get_players(request):
     return JsonResponse(players, safe=False)
 
 def get_players_nearby(request):
-    # Commented for testing purposes
-    # if not request.user.is_authenticated:
-    #       return HttpResponse(f'User not signed in')
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in!')
 
     data = json.loads(request.body)
     latitude = float(data['latitude'])
@@ -108,10 +106,27 @@ def get_players_nearby(request):
     ]
     return JsonResponse(players, safe=False)
 
+def get_player_by_username(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in')
+
+    data = json.loads(request.body)
+    username = data['username']
+    found_player = Player.objects.filter(username=username)
+    if found_player is None:
+        return HttpResponse("0: Failed to find player", status=400)
+
+    player = [
+        {
+            "id": found_player.user.id,
+            "username": found_player.user.username,
+            "latitude": found_player.location.y,
+            "longitude": found_player.location.x
+        }
+    ]
+    return JsonResponse(player, safe=False)
+
 def update_location(request):
-    # Commented for testing purposes
-    # if not request.user.is_authenticated:
-    #       return HttpResponse(f'User not signed in')
 
     data = json.loads(request.body)
     latitude = float(data['latitude'])
@@ -124,11 +139,10 @@ def update_location(request):
     return HttpResponse("1: Successfully updated location!")
 
 def get_friends(request):
-    # Commented for testing purposes
-    #if not request.user.is_authenticated:
-    #   return HttpResponse(f'user not signed in')
-    #if not hasattr(request.user, 'player'):
-    #    return HttpResponse(f'user is not a player')
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in')
+    if not hasattr(request.user, 'player'):
+        return HttpResponse(f'user is not a player')
 
     friends = [
         {
@@ -142,11 +156,10 @@ def get_friends(request):
     return JsonResponse(friends, safe=False)
 
 def send_friendship_request(request):
-    # Commented for testing purposes
-    # if not request.user.is_authenticated:
-    #   return HttpResponse(f'user not signed in')
-    # if not hasattr(request.user, 'player'):
-    #    return HttpResponse(f'user is not a player')
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+    if not hasattr(request.user, 'player'):
+        return HttpResponse(f'user is not a player')
 
     data = json.loads(request.body)
     from_user_id = data['from_user']
