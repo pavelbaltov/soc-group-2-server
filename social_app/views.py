@@ -109,10 +109,10 @@ def get_players_nearby(request):
 def get_player_by_username(request, username):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
-
-    found_user = User.objects.get(username=username)
-    if found_user is None:
-        return HttpResponse("0: Failed to find player", status=400)
+    try:
+        found_user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return HttpResponse("0: Failed to find player", status=200)
 
     player = [
         {
@@ -173,7 +173,7 @@ def send_friendship_request(request):
     ).exists()
 
     if existing_request:
-        return HttpResponse("0: Friendship request already sent", status=400)
+        return HttpResponse("0: Friendship request already sent", status=200)
 
     # Create a new friendship request
     frRe = FriendshipRequest(requester=requester.player, recipient=recipient.player)
@@ -201,7 +201,7 @@ def respond_friendship_request(request):
     ).exists()
 
     if not existing_request:
-        return HttpResponse("0: Friendship request doesn\'t exist", status=400)
+        return HttpResponse("0: Friendship request doesn\'t exist", status=200)
 
     frRe = FriendshipRequest.objects.get(requester=requester.player, recipient=recipient.player)
     if response:
