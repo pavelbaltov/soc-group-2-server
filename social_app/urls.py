@@ -13,7 +13,7 @@ urlpatterns = [
 
     path('get_players/', views.get_players),
     path('get_players_nearby/', views.get_players_nearby),
-    path('get_player_by_username/', views.get_player_by_username),
+    path('get_player_by_username/<str:username>/', views.get_player_by_username),
 
     path('get_friends/', views.get_friends),
     path('send_friendship_request/', views.send_friendship_request),

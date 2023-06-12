@@ -106,12 +106,10 @@ def get_players_nearby(request):
     ]
     return JsonResponse(players, safe=False)
 
-def get_player_by_username(request):
+def get_player_by_username(request, username):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
 
-    data = json.loads(request.body)
-    username = data['username']
     found_player = Player.objects.filter(username=username)
     if found_player is None:
         return HttpResponse("0: Failed to find player", status=400)
