@@ -23,8 +23,7 @@ class Player(models.Model):
     # i.e. returns the friendships of a player
     def get_friends(self):
         friendships = Friendship.objects.filter(Q(player=self) | Q(friend=self))
-        friends = [f.player for f in friendships if f.player.user.id != self.user.id]
-        friends += [f.friend for f in friendships if f.friend.user.id != self.user.id]
+        friends = [f.get_friend_of_player(f, self) for f in friendships]
         return friends
 
     def get_requests(self):
@@ -114,6 +113,12 @@ class Friendship(models.Model):
         on_delete=models.CASCADE,
         related_name='friendTo',
     )
+    def get_friend_of_player(self, player_to_inspect):
+        if player_to_inspect.user.id == self.player.user.id:
+            return self.friend
+        elif player_to_inspect.user.id == self.friend.user.id:
+            return self.player
+        return None
 
     class Meta:
         unique_together = ('player', 'friend')
