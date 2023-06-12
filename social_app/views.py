@@ -110,16 +110,16 @@ def get_player_by_username(request, username):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
 
-    found_player = Player.objects.filter(username=username)
-    if found_player is None:
+    found_user = User.objects.filter(username=username)
+    if found_user is None:
         return HttpResponse("0: Failed to find player", status=400)
 
     player = [
         {
-            "id": found_player.user.id,
-            "username": found_player.user.username,
-            "latitude": found_player.location.y,
-            "longitude": found_player.location.x
+            "id": found_user.id,
+            "username": found_user.username,
+            "latitude": found_user.player.location.y,
+            "longitude": found_user.player.location.x
         }
     ]
     return JsonResponse(player, safe=False)
