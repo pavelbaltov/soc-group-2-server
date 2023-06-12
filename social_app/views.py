@@ -119,7 +119,7 @@ def get_player_by_username(request, username):
             "username": found_user.username,
             "latitude": found_user.player.location.y,
             "longitude": found_user.player.location.x
-        }
+    }
 
     return JsonResponse(player, safe=False)
 
