@@ -110,7 +110,7 @@ def get_player_by_username(request, username):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
 
-    found_user = User.objects.filter(username=username)
+    found_user = User.objects.get(username=username)
     if found_user is None:
         return HttpResponse("0: Failed to find player", status=400)
 
