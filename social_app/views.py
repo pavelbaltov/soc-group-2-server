@@ -114,14 +114,13 @@ def get_player_by_username(request, username):
     except User.DoesNotExist:
         return HttpResponse("0: Failed to find player", status=200)
 
-    player = [
-        {
+    player = {
             "id": found_user.id,
             "username": found_user.username,
             "latitude": found_user.player.location.y,
             "longitude": found_user.player.location.x
         }
-    ]
+
     return JsonResponse(player, safe=False)
 
 def update_location(request):
