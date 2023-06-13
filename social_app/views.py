@@ -217,12 +217,12 @@ def get_friendship_requests(request):
 
     requests = [
         {
-            "id": request.user.id,
-            "username": request.user.username,
-            "latitude": request.location.y,
-            "longitude": request.location.x
+            "id": r.user.id,
+            "username": r.user.username,
+            "latitude": r.location.y,
+            "longitude": r.location.x
         }
-        for request in request.user.player.get_requests()
+        for r in request.user.player.get_requests()
     ]
     return requests
 
