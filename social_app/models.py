@@ -28,7 +28,7 @@ class Player(models.Model):
 
     def get_requests(self):
         friendship_requests = FriendshipRequest.objects.filter(recipient=self.user.id)
-        requests = [r.recipient for r in friendship_requests]
+        requests = [r.requester for r in friendship_requests]
         return requests
 
     def __str__(self):
