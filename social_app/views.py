@@ -214,6 +214,9 @@ def get_friendship_requests(request):
     # Commented for testing purposes
     # if not request.user.is_authenticated:
     #   return HttpResponse(f'user not signed in')
+    requestsOfPlayer = request.user.player.get_requests()
+    if len(requestsOfPlayer) == 0:
+        return HttpResponse("0: No requests", status=200)
 
     requests = [
         {
@@ -222,9 +225,9 @@ def get_friendship_requests(request):
             "latitude": r.location.y,
             "longitude": r.location.x
         }
-        for r in request.user.player.get_requests()
+        for r in requestsOfPlayer
     ]
-    return requests
+    return JsonResponse(requests, safe=False)
 
 def remove_friend(request):
 
