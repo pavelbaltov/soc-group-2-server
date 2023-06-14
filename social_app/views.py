@@ -69,6 +69,8 @@ def signup(request):
 def get_players(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in')
+
+    non_friend_players = [player for player in Player.objects.all() if player.is_friend_with(request.user.player)]
     players = [
         {
             "id": player.user.id,
@@ -76,7 +78,7 @@ def get_players(request):
             "latitude": player.location.y,
             "longitude": player.location.x
         }
-        for player in Player.objects.all()
+        for player in non_friend_players
     ]
 
     return JsonResponse(players, safe=False)
@@ -152,18 +154,14 @@ def get_friends(request):
     ]
     return JsonResponse(friends, safe=False)
 
-def send_friendship_request(request):
+def send_friendship_request(request, username):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
     if not hasattr(request.user, 'player'):
         return HttpResponse(f'user is not a player')
 
-    data = json.loads(request.body)
-    from_user_id = data['from_user']
-    to_user_id = data['to_user']
-
-    requester = User.objects.get(id=from_user_id)
-    recipient = User.objects.get(id=to_user_id)
+    requester = User.objects.get(username=request.user.username)
+    recipient = User.objects.get(username=username)
 
     #check if such players exists
 

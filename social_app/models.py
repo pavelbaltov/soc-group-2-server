@@ -31,6 +31,10 @@ class Player(models.Model):
         requests = [r.requester for r in friendship_requests]
         return requests
 
+    def is_friend_with(self, player):
+        is_friend = Friendship.objects.filter(Q(player=self, friend=player) | Q(player=player, friend=self)).exists()
+        return is_friend
+
     def __str__(self):
         return self.user.username
 

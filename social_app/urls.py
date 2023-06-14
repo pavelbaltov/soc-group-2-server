@@ -16,7 +16,7 @@ urlpatterns = [
     path('get_player_by_username/<str:username>/', views.get_player_by_username),
 
     path('get_friends/', views.get_friends),
-    path('send_friendship_request/', views.send_friendship_request),
+    path('send_friendship_request/<str:username>/', views.send_friendship_request),
     path('respond_friendship_request/', views.respond_friendship_request),
     path('get_friendship_requests/', views.get_friendship_requests),
     path('remove_friend/', views.remove_friend),
