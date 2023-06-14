@@ -71,7 +71,7 @@ def get_players(request):
         return HttpResponse(f'User not signed in')
 
     non_friend_players = [player for player in Player.objects.all() if not player.is_friend_with(request.user.player)
-                          and player is not request.user.player]
+                          and player.user.username is not request.user.username]
     players = [
         {
             "id": player.user.id,
