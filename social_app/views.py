@@ -189,11 +189,11 @@ def respond_friendship_request(request):
 
     data = json.loads(request.body)
 
-    to_user = data['to_user']
+    from_user = data['from_user']
     response = data['response']
 
-    requester = request.user
-    recipient = User.objects.get(username=to_user)
+    requester = User.objects.get(username=from_user)
+    recipient = request.user
 
     existing_request = FriendshipRequest.objects.filter(
         requester=requester.player, recipient=recipient.player
