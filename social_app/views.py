@@ -119,6 +119,10 @@ def get_player_by_username(request, username):
     except User.DoesNotExist:
         return HttpResponse("0: Failed to find player", status=200)
 
+    if (request.user.player.is_friend_with(found_user.player)):
+        return HttpResponse("0: This player is in your friend list", status=200)
+
+
     player = {
             "id": found_user.id,
             "username": found_user.username,
