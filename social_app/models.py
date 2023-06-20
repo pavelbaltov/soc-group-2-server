@@ -87,7 +87,7 @@ class Match(models.Model):
         else:
             return False
     def __str__(self):
-        return self.host.user.username
+        return self.name
 
 
 class Clue(models.Model):
