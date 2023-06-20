@@ -247,6 +247,71 @@ def remove_friend(request):
 
 
 # TILTBALL: host_match, join_match, get_match, pass_ball, end_match
+def get_matches(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    matches = [
+        {
+            "name": match.name,
+            "host": match.host.user.username,
+            "latitude": match.createdAtLocation.y,
+            "longitude": match.createdAtLocation.x,
+            "duration": match.duration,
+            "radius": match.radius,
+            "number_of_hunters": match.numberOfHunters,
+            "number_of_hiders": match.numberOfHiders
+        }
+        for match in Match.objects.all()
+    ]
+
+    return JsonResponse(matches, safe=False)
+
+def get_matches_nearby(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+    data = json.loads(request.body)
+    latitude = float(data['latitude'])
+    longitude = float(data['longitude'])
+    radius = float(data['radius'])
+
+    if latitude is None or longitude is None or radius is None:
+        return HttpResponse("0: Missing required fields'}", status=400)
+
+    current_location = Point(longitude, latitude)
+
+    matches = [
+        {
+            "name": match.name,
+            "host": match.host.user.username,
+            "latitude": match.createdAtLocation.y,
+            "longitude": match.createdAtLocation.x,
+            "duration": match.duration,
+            "radius": match.radius,
+            "number_of_hunters": match.numberOfHunters,
+            "number_of_hiders": match.numberOfHiders
+        }
+        for match in Match.objects.all() if distance(current_location, match.createdAtLocation).kilometers < radius
+    ]
+    return JsonResponse(matches, safe=False)
+
+def get_matches_of_friends(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+    matches = [
+        {
+            "name": match.name,
+            "host": match.host.user.username,
+            "latitude": match.createdAtLocation.y,
+            "longitude": match.createdAtLocation.x,
+            "duration": match.duration,
+            "radius": match.radius,
+            "number_of_hunters": match.numberOfHunters,
+            "number_of_hiders": match.numberOfHiders
+        }
+        for match in Match.objects.all() if request.user.player.is_friend_with(match.host)
+    ]
+    return JsonResponse(matches, safe=False)
 
 def host_match(request):
     if not request.user.is_authenticated:
@@ -254,22 +319,40 @@ def host_match(request):
     if not hasattr(request.user, 'player'):
         return HttpResponse(f'user is not a player')
 
+    data = json.loads(request.body)
+    name = data["name"]
+    latitude = float(data['latitude'])
+    longitude = float(data['longitude'])
+    duration = data['duration']
+    radius = float(data['duration'])
+    number_of_hunters = int(data['number_of_hunters'])
+    number_of_hiders = int(data['number_of_hiders'])
+
     player = request.user.player
+
     if hasattr(player, 'match'):
         # The player has at some point hosted a match, so this is reset to
         # its initial state.
-        player.match.host_has_ball = False
-        player.match.has_started = False
-        player.match.is_over = False
-        player.match.position = 0
+        player.match.name = name;
+        player.match.createdAtLocation = Point(longitude,latitude)
+        player.match.duration = duration
+        player.match.radius = radius
+        player.match.numberOfHiders = number_of_hiders
+        player.match.numberOfHunters = number_of_hunters
         player.match.save()
-        return HttpResponse(f'0: reset match')
+        return HttpResponse(f'1: reset match')
     else:
         # The player has never hosted a match, so the default values of the
         # newly created match are already correct.
         match = Match(host=player)
+        match.name = name
+        match.createdAtLocation = Point(longitude, latitude)
+        match.duration = duration
+        match.radius = radius
+        match.numberOfHiders = number_of_hiders
+        match.numberOfHunters = number_of_hunters
         match.save()
-        return HttpResponse(f'0: created match')
+        return HttpResponse(f'1: created match')
 
 
 def join_match(request):
@@ -280,13 +363,16 @@ def join_match(request):
 
     host_name = request.POST['host']
     host = Player.objects.get(user__username=host_name)
+
     if hasattr(host, 'match'):
-        host.match.host_has_ball = True
-        host.match.has_started = True
-        host.match.save()
-        return HttpResponse(f'0: joined match, started match')
+        if (host.match.is_full()):
+            return HttpResponse(f"0: Match is full")
+        else:
+            # TODO: add person to players
+            host.match.save()
+            return HttpResponse(f'1: joined match, started match')
     else:
-        return HttpResponse(f'no match with host {host_name} exists')
+        return HttpResponse(f'No match with host {host_name} exists')
 
 
 def get_match(request):
@@ -317,30 +403,6 @@ def get_match(request):
         return HttpResponse(f'0: {match_ball}')
     else:
         return HttpResponse(f'1: {match_ball}')
-
-
-def pass_ball(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
-    if request.method != 'POST':
-        return HttpResponse(f'incorrect request method.')
-
-    host_name = request.POST['host']
-    host_has_ball = request.POST['host_has_ball'] == "true"
-    position = request.POST['position']
-    velocity_x = request.POST['velocity_x']
-    velocity_y = request.POST['velocity_y']
-
-    host = Player.objects.get(user__username=host_name)
-    if not hasattr(host, 'match'):
-        return HttpResponse(f'no match with host {host_name} exists')
-
-    host.match.host_has_ball = host_has_ball
-    host.match.position = position
-    host.match.velocity_x = velocity_x
-    host.match.velocity_y = velocity_y
-    host.match.save()
-    return HttpResponse(f'0: passed ball')
 
 
 def end_match(request):

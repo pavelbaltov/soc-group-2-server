@@ -22,9 +22,12 @@ urlpatterns = [
     path('remove_friend/', views.remove_friend),
 
     path('update_location/', views.update_location),
-    path('get_match/', views.get_match),
+
+    path('get_matches/', views.get_matches),
+    path('get_matches_nearby/', views.get_matches_nearby),
+    path('get_matches_of_friends/', views.get_matches_of_friends),
     path('host_match/', views.host_match),
     path('join_match/', views.join_match),
-    path('pass_ball/', views.pass_ball),
+
     path('end_match/', views.end_match),
 ]

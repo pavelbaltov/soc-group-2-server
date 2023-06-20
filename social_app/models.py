@@ -50,6 +50,8 @@ class Match(models.Model):
         null=True
     )
 
+    name = models.CharField(max_length=10, default=host.user.username + "'s Game")
+
     # password needed to access the hosted match
     password = models.CharField(max_length=10, default="")
 
@@ -79,7 +81,11 @@ class Match(models.Model):
             return True
         else:
             return False
-
+    def is_full(self):
+        if self.players.objects.count() >= self.numberOfHunters + self.numberOfHiders:
+            return True
+        else:
+            return False
     def __str__(self):
         return self.host.username
 
