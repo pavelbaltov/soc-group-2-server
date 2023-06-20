@@ -260,7 +260,7 @@ def get_matches(request):
     matches = [
         {
             "name": match.name,
-            "host": match.hostusername,
+            "host": match.host,
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
