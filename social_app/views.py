@@ -391,7 +391,6 @@ def join_match(request):
             return HttpResponse(f"0: Match is full")
         else:
             # TODO: add person to players
-            host.match.save()
             return HttpResponse(f'1: joined match, started match')
     else:
         return HttpResponse(f'No match with host {host_name} exists')
