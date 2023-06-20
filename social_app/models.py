@@ -58,11 +58,11 @@ class Player(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    role = models.CharField(max_length=10, blank=True, null=True, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10,  null=True, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
     location = models.PointField(null=True)
-    match = models.ForeignKey(Match, null=True, on_delete=models.SET_NULL)
+    match = models.ForeignKey(Match, blank=True, null=True, on_delete=models.SET_NULL)
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
     def get_friends(self):
