@@ -251,14 +251,22 @@ def get_matches(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
+    data = json.loads(request.body)
+    latitude = float(data['latitude'])
+    longitude = float(data['longitude'])
+
+    current_location = Point(longitude, latitude)
+
     matches = [
         {
             "name": match.name,
-            "host": match.host.user.username,
+            "host": match.hostusername,
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
             "radius": match.radius,
+            "distance": distance(current_location, match.createdAtLocation).kilometers,
+            "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
@@ -280,14 +288,17 @@ def get_matches_nearby(request):
 
     current_location = Point(longitude, latitude)
 
+
     matches = [
         {
             "name": match.name,
-            "host": match.host.user.username,
+            "host": match.host,
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
             "radius": match.radius,
+            "distance": distance(current_location, match.createdAtLocation).kilometers,
+            "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
@@ -298,14 +309,23 @@ def get_matches_nearby(request):
 def get_matches_of_friends(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
+
+    data = json.loads(request.body)
+    latitude = float(data['latitude'])
+    longitude = float(data['longitude'])
+
+    current_location = Point(longitude, latitude)
+
     matches = [
         {
             "name": match.name,
-            "host": match.host.user.username,
+            "host": match.host,
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
             "radius": match.radius,
+            "distance": distance(current_location, match.createdAtLocation).kilometers,
+            "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
@@ -333,6 +353,7 @@ def host_match(request):
     if hasattr(player, 'match'):
         # The player has at some point hosted a match, so this is reset to
         # its initial state.
+        player.match.host = player.user.username
         player.match.name = name
         player.match.createdAtLocation = Point(longitude, latitude)
         player.match.duration = duration
@@ -346,6 +367,7 @@ def host_match(request):
         # newly created match are already correct.
         match = Match(host=player)
         match.name = name
+        match.host = player.user.username
         match.createdAtLocation = Point(longitude, latitude)
         match.duration = duration
         match.radius = radius

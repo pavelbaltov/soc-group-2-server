@@ -4,63 +4,21 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 import datetime
 
-class Player(models.Model):
-    ROLE_CHOICES = [
-        ("HI", "Hider"),
-        ("HU", "Hunter"),
-    ]
-
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
-    role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
-
-    # represents the GPS location of a player
-    location = models.PointField(null=True)
-    # function which has to return all Friendship objects which are associated with this user
-    # i.e. returns the friendships of a player
-    def get_friends(self):
-        friendships = Friendship.objects.filter(Q(player=self) | Q(friend=self))
-        friends = [f.get_friend_of_player(self) for f in friendships]
-        return friends
-
-    def get_requests(self):
-        friendship_requests = FriendshipRequest.objects.filter(recipient=self.user.id)
-        requests = [r.requester for r in friendship_requests]
-        return requests
-
-    def is_friend_with(self, player):
-        is_friend = Friendship.objects.filter(Q(player=self, friend=player) | Q(player=player, friend=self)).exists()
-        return is_friend
-
-    def __str__(self):
-        return self.user.username
-
-
 class Match(models.Model):
     # no need for id field as Django creates auto-incrementing ids
     # for each model
-
-    host = models.OneToOneField(
-        Player,
-        on_delete=models.CASCADE,
-        related_name='playerHost',
-        null=True
-    )
-
+    host = models.CharField(default="")
     name = models.CharField(max_length=10, default="")
 
     # password needed to access the hosted match
     password = models.CharField(max_length=10, null=True)
 
-    players = models.ForeignKey(
-        Player,
-        on_delete=models.CASCADE,
-        related_name='playersInMatch',
-        null=True
-    )
+    #players = models.ForeignKey(
+    #    Player,
+    #    on_delete=models.CASCADE,
+    #    related_name='playersInMatch',
+    #    null=True
+    #)
 
     numberOfHunters = models.IntegerField(default=2)
     numberOfHiders = models.IntegerField(default=4)
@@ -82,12 +40,50 @@ class Match(models.Model):
         else:
             return False
     def is_full(self):
-        if self.players.objects.count() >= self.numberOfHunters + self.numberOfHiders:
+        if self.player_set.count() >= self.numberOfHunters + self.numberOfHiders:
             return True
         else:
             return False
     def __str__(self):
         return self.name
+
+class Player(models.Model):
+    ROLE_CHOICES = [
+        ("HI", "Hider"),
+        ("HU", "Hunter"),
+    ]
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
+
+    # represents the GPS location of a player
+    location = models.PointField(null=True)
+    match = models.ForeignKey(Match, on_delete=models.SET_NULL);
+    # function which has to return all Friendship objects which are associated with this user
+    # i.e. returns the friendships of a player
+    def get_friends(self):
+        friendships = Friendship.objects.filter(Q(player=self) | Q(friend=self))
+        friends = [f.get_friend_of_player(self) for f in friendships]
+        return friends
+
+    def get_requests(self):
+        friendship_requests = FriendshipRequest.objects.filter(recipient=self.user.id)
+        requests = [r.requester for r in friendship_requests]
+        return requests
+
+    def is_friend_with(self, player):
+        is_friend = Friendship.objects.filter(Q(player=self, friend=player) | Q(player=player, friend=self)).exists()
+        return is_friend
+
+    def __str__(self):
+        return self.user.username
+
+
+
 
 
 class Clue(models.Model):
