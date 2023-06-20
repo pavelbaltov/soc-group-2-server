@@ -50,7 +50,7 @@ class Match(models.Model):
         null=True
     )
 
-    name = models.CharField(max_length=10, null=True)
+    name = models.CharField(max_length=10, default="")
 
     # password needed to access the hosted match
     password = models.CharField(max_length=10, default="")
