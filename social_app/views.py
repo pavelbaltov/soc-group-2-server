@@ -333,8 +333,8 @@ def host_match(request):
     if hasattr(player, 'match'):
         # The player has at some point hosted a match, so this is reset to
         # its initial state.
-        player.match.name = name;
-        player.match.createdAtLocation = Point(longitude,latitude)
+        player.match.name = name
+        player.match.createdAtLocation = Point(longitude, latitude)
         player.match.duration = duration
         player.match.radius = radius
         player.match.numberOfHiders = number_of_hiders
