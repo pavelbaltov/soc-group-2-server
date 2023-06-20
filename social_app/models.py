@@ -7,7 +7,7 @@ import datetime
 class Match(models.Model):
     # no need for id field as Django creates auto-incrementing ids
     # for each model
-    host = models.CharField(default="")
+    host = models.CharField(max_length=20, default="")
     name = models.CharField(max_length=10, default="")
 
     # password needed to access the hosted match
@@ -62,7 +62,7 @@ class Player(models.Model):
 
     # represents the GPS location of a player
     location = models.PointField(null=True)
-    match = models.ForeignKey(Match, on_delete=models.SET_NULL);
+    match = models.ForeignKey(Match, null=True, on_delete=models.SET_NULL)
     # function which has to return all Friendship objects which are associated with this user
     # i.e. returns the friendships of a player
     def get_friends(self):
