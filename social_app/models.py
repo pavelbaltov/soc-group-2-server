@@ -53,7 +53,7 @@ class Match(models.Model):
     name = models.CharField(max_length=10, default="")
 
     # password needed to access the hosted match
-    password = models.CharField(max_length=10, default="")
+    password = models.CharField(max_length=10, null=True)
 
     players = models.ForeignKey(
         Player,
@@ -87,7 +87,7 @@ class Match(models.Model):
         else:
             return False
     def __str__(self):
-        return self.host.username
+        return self.host.user.username
 
 
 class Clue(models.Model):
