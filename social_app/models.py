@@ -58,7 +58,7 @@ class Player(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    role = models.CharField(max_length=10, null=True, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=10, blank=True, null=True, choices=ROLE_CHOICES)
 
     # represents the GPS location of a player
     location = models.PointField(null=True)
