@@ -349,23 +349,23 @@ def host_match(request):
         return HttpResponse(f'1: created match')
 
 
-def join_match(request):
+def join_match(request, host):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
     if request.method != 'POST':
         return HttpResponse(f'incorrect request method.')
 
-    host_name = request.POST['host']
-    host = Player.objects.get(user__username=host_name)
 
-    if hasattr(host, 'match'):
-        if (host.match.is_full()):
+    hostPlayer = Player.objects.get(user__username=host)
+
+    if hasattr(hostPlayer, 'match'):
+        if (hostPlayer.match.is_full()):
             return HttpResponse(f"0: Match is full")
         else:
-            # TODO: add person to players
-            return HttpResponse(f'1: joined match, started match')
+            request.user.player.match = Match.objects.get(host=host)
+            return HttpResponse(f'1: Joined match,')
     else:
-        return HttpResponse(f'No match with host {host_name} exists')
+        return HttpResponse(f'0: No match with host {host} exists')
 
 
 def get_match(request):
