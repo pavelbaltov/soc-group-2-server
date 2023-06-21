@@ -27,7 +27,7 @@ urlpatterns = [
     path('get_matches_nearby/<str:radius>/', views.get_matches_nearby),
     path('get_matches_of_friends/', views.get_matches_of_friends),
     path('host_match/', views.host_match),
-    path('join_match/<str:host>', views.join_match),
+    path('join_match/<str:host>/', views.join_match),
 
     path('end_match/', views.end_match),
 ]
