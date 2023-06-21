@@ -379,6 +379,21 @@ def exit_match(request):
         request.user.player.save()
         return HttpResponse(f'1: Exited match')
 
+def get_players_in_current_match(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in!')
+
+    players = [
+        {
+            "username": player.user.username,
+            "latitude": player.location.y,
+            "longitude": player.location.x,
+            "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
+        }
+        for player in request.user.player.match.player_set
+    ]
+    return JsonResponse(players, safe=False)
+
 
 def end_match(request):
     if not request.user.is_authenticated:

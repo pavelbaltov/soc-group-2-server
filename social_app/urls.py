@@ -29,6 +29,7 @@ urlpatterns = [
     path('host_match/', views.host_match),
     path('join_match/', views.join_match),
     path('end_match/', views.exit_match),
+    path('get_players_in_current_match/', views.get_players_in_current_match),
 
     path('end_match/', views.end_match),
 ]
