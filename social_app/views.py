@@ -313,7 +313,7 @@ def host_match(request):
         return HttpResponse(f'user is not a player')
 
     data = json.loads(request.body)
-    name = data["name"]
+    name = data['name']
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
     #duration = int(data['duration'])
