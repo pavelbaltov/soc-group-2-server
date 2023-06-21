@@ -326,11 +326,11 @@ def host_match(request):
     match.host = player.user.username
     match.name = name
     match.createdAtLocation = Point(longitude, latitude)
-    #match.duration = duration
+    match.duration = duration
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    #match.createdAtTime = time.localtime()
+    match.createdAtTime = str(time.localtime())
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
