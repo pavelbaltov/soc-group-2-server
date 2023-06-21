@@ -321,7 +321,7 @@ def host_match(request):
     number_of_hiders = int(data['number_of_hiders'])
 
     player = request.user.player
-
+    player.match = Match()
     player.match.host = player.user.username
     player.match.name = name
     player.match.createdAtLocation = Point(longitude, latitude)
