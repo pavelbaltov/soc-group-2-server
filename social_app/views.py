@@ -390,7 +390,7 @@ def get_players_in_current_match(request):
             "longitude": player.location.x,
             "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
         }
-        for player in request.user.player.match.player_set
+        for player in request.user.player.match.player_set.all()
     ]
     return JsonResponse(players, safe=False)
 
