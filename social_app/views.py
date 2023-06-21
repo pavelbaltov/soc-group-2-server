@@ -394,6 +394,29 @@ def get_players_in_current_match(request):
     ]
     return JsonResponse(players, safe=False)
 
+def get_match(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in!')
+    if request.user.player.match is None:
+        return HttpResponse(f"0: No active match")
+
+    match = request.user.player.match
+
+    match = {
+            "name": match.name,
+            "host": match.host,
+            "latitude": match.createdAtLocation.y,
+            "longitude": match.createdAtLocation.x,
+            "duration": match.duration,
+            "radius": match.radius,
+            "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
+            "number_of_joined_players": match.player_set.count(),
+            "number_of_hunters": match.numberOfHunters,
+            "number_of_hiders": match.numberOfHiders
+    }
+
+    return JsonResponse(match, safe=False)
+
 
 def end_match(request):
     if not request.user.is_authenticated:
