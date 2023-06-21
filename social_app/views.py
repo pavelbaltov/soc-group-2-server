@@ -316,7 +316,7 @@ def host_match(request):
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
     duration = data['duration']
-    radius = float(data['duration'])
+    radius = float(data['radius'])
     number_of_hunters = int(data['number_of_hunters'])
     number_of_hiders = int(data['number_of_hiders'])
 
@@ -337,7 +337,7 @@ def host_match(request):
     else:
         # The player has never hosted a match, so the default values of the
         # newly created match are already correct.
-        match = Match(host=player)
+        match = Match(host=player.user.username)
         match.name = name
         match.host = player.user.username
         match.createdAtLocation = Point(longitude, latitude)
@@ -355,8 +355,8 @@ def join_match(request, host):
     if request.method != 'POST':
         return HttpResponse(f'incorrect request method.')
 
-
-    hostPlayer = Player.objects.get(user__username=host)
+    host_name = request.POST['hostname']
+    hostPlayer = Player.objects.get(user__username=host_name)
 
     if hasattr(hostPlayer, 'match'):
         if (hostPlayer.match.is_full()):
