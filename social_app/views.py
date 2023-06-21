@@ -286,7 +286,7 @@ def get_matches_nearby(request, radius):
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
-        for match in Match.objects.all() if distance(request.user.player.location, match.createdAtLocation).kilometers < radius
+        for match in Match.objects.all() if distance(request.user.player.location, match.createdAtLocation).kilometers < float(radius)
     ]
     return JsonResponse(matches, safe=False)
 
