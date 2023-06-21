@@ -358,7 +358,7 @@ def join_match(request):
     host_name = request.POST['hostname']
     hostPlayer = Player.objects.get(user__username=host_name)
 
-    if hasattr(hostPlayer, 'match'):
+    if hostPlayer.match is not None:
         if hostPlayer.match.is_full():
             return HttpResponse(f"0: Match is full")
         else:
