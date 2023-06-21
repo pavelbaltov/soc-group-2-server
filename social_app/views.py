@@ -8,6 +8,7 @@ from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
+import datetime
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
@@ -325,7 +326,7 @@ def host_match(request):
     player.match.host = player.user.username
     player.match.name = name
     player.match.createdAtLocation = Point(longitude, latitude)
-    player.match.duration = duration
+    player.match.duration = datetime.timedelta(minutes=int(duration))
     player.match.radius = radius
     player.match.numberOfHiders = number_of_hiders
     player.match.numberOfHunters = number_of_hunters
