@@ -316,7 +316,7 @@ def host_match(request):
     name = data["name"]
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
-    duration = int(data['duration'])
+    #duration = int(data['duration'])
     radius = float(data['radius'])
     number_of_hunters = int(data['number_of_hunters'])
     number_of_hiders = int(data['number_of_hiders'])
@@ -326,10 +326,11 @@ def host_match(request):
     match.host = player.user.username
     match.name = name
     match.createdAtLocation = Point(longitude, latitude)
-    match.duration = duration
+    #match.duration = duration
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
+    match.createdAtTime = datetime.now()
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
