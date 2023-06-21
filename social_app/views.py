@@ -79,7 +79,8 @@ def get_players(request):
             "id": player.user.id,
             "username": player.user.username,
             "latitude": player.location.y,
-            "longitude": player.location.x
+            "longitude": player.location.x,
+            "distance": distance(request.user.player.location, player.location).kilometers
         }
         for player in non_friend_players
     ]
@@ -105,7 +106,8 @@ def get_players_nearby(request):
             "id": player.user.id,
             "username": player.user.username,
             "latitude": player.location.y,
-            "longitude": player.location.x
+            "longitude": player.location.x,
+            "distance": distance(request.user.player.location, player.location).kilometers
         }
         for player in Player.objects.all() if distance(current_location, player.location).kilometers < radius
     ]
@@ -124,10 +126,11 @@ def get_player_by_username(request, username):
 
 
     player = {
-            "id": found_user.id,
-            "username": found_user.username,
-            "latitude": found_user.player.location.y,
-            "longitude": found_user.player.location.x
+        "id": found_user.id,
+        "username": found_user.username,
+        "latitude": found_user.player.location.y,
+        "longitude": found_user.player.location.x,
+        "distance": distance(request.user.player.location, found_user.player.location).kilometers
     }
 
     return JsonResponse(player, safe=False)
@@ -259,7 +262,7 @@ def get_matches(request):
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
             "radius": match.radius,
-            "distance": distance(current_location, match.createdAtLocation).kilometers,
+            "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
