@@ -8,7 +8,7 @@ from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
-import datetime
+import datetime, time
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
@@ -330,7 +330,7 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetime.now().time()
+    match.createdAtTime = time.localtime()
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
