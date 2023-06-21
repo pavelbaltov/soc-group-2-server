@@ -24,7 +24,7 @@ class Match(models.Model):
     numberOfHiders = models.IntegerField(default=4)
 
     # time(hour = 0, minute = 0, second = 0)
-    duration = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    duration = models.DecimalField(blank = false, null=True)
     radius = models.FloatField(max_length=10, default=5)
 
     # latitude and longitude of the place at which the match was first created
