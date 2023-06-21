@@ -39,11 +39,13 @@ class Match(models.Model):
             return True
         else:
             return False
+
     def is_full(self):
         if self.player_set.count() >= self.numberOfHunters + self.numberOfHiders:
             return True
         else:
             return False
+
     def __str__(self):
         return self.name
 
