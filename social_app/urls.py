@@ -28,6 +28,7 @@ urlpatterns = [
     path('get_matches_of_friends/', views.get_matches_of_friends),
     path('host_match/', views.host_match),
     path('join_match/', views.join_match),
+    path('end_match/', views.exit_match),
 
     path('end_match/', views.end_match),
 ]

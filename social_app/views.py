@@ -364,39 +364,20 @@ def join_match(request):
         else:
             request.user.player.match = Match.objects.get(host=host_name)
             request.user.player.save()
-            return HttpResponse(f'1: Joined match,')
+            return HttpResponse(f'1: Joined match')
     else:
         return HttpResponse(f'0: No match with host {host_name} exists')
 
-
-def get_match(request):
+def exit_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-    if request.method != 'POST':
-        return HttpResponse(f'incorrect request method.')
 
-    host_name = request.POST['host']
-    # Keyword attributes are very powerful. Look at the Django documentation
-    # for more details. This line fetches the player that has a user that
-    # has a username that equals name. The __ is equivalent to a dot.
-    # user.username in regular code becomes the user__username parameter of
-    # the get function. Remember: players don't have usernames, only the
-    # players' users have usernames.
-    host = Player.objects.get(user__username=host_name)
-
-    if not hasattr(host, 'match'):
-        return HttpResponse(f'no match with host {host_name} exists')
-    if not host.match.has_started:
-        return HttpResponse(f'match has not started')
-    if host.match.is_over:
-        return HttpResponse(f'2: match is over')
-    match_ball = f'{host.match.position} '
-    match_ball += f'{host.match.velocity_x} '
-    match_ball += f'{host.match.velocity_y}'
-    if host.match.host_has_ball:
-        return HttpResponse(f'0: {match_ball}')
+    if request.user.player.match is None:
+        return HttpResponse(f"0: No active match")
     else:
-        return HttpResponse(f'1: {match_ball}')
+        request.user.player.match = None
+        request.user.player.save()
+        return HttpResponse(f'1: Exited match')
 
 
 def end_match(request):
