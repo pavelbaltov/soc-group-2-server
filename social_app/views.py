@@ -80,14 +80,14 @@ def get_players(request):
             "username": player.user.username,
             "latitude": player.location.y,
             "longitude": player.location.x,
-            "distance": distance(request.user.player.location, player.location).kilometers
+            "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
         }
         for player in non_friend_players
     ]
 
     return JsonResponse(players, safe=False)
 
-def get_players_nearby(request):
+def get_players_nearby(request,radius):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in!')
 
@@ -99,9 +99,9 @@ def get_players_nearby(request):
             "username": player.user.username,
             "latitude": player.location.y,
             "longitude": player.location.x,
-            "distance": distance(request.user.player.location, player.location).kilometers
+            "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
         }
-        for player in Player.objects.all() if distance(current_location, player.location).kilometers < radius
+        for player in Player.objects.all() if distance(current_location, player.location).kilometers < float(radius)
     ]
     return JsonResponse(players, safe=False)
 
@@ -121,7 +121,7 @@ def get_player_by_username(request, username):
         "username": found_user.username,
         "latitude": found_user.player.location.y,
         "longitude": found_user.player.location.x,
-        "distance": distance(request.user.player.location, found_user.player.location).kilometers
+        "distance": round(distance(request.user.player.location, found_user.player.location).kilometers,2)
     }
 
     return JsonResponse(player, safe=False)
@@ -149,7 +149,7 @@ def get_friends(request):
             "username": friend.user.username,
             "latitude": friend.location.y,
             "longitude": friend.location.x,
-            "distance": distance(request.user.player.location, friend.location).kilometers
+            "distance": round(distance(request.user.player.location, friend.location).kilometers, 2)
         }
         for friend in request.user.player.get_friends()
     ]
@@ -222,7 +222,7 @@ def get_friendship_requests(request):
             "username": r.user.username,
             "latitude": r.location.y,
             "longitude": r.location.x,
-            "distance": distance(request.user.player.location, r.location).kilometers
+            "distance": round(distance(request.user.player.location, r.location).kilometers, 2)
         }
         for r in requestsOfPlayer
     ]
