@@ -251,12 +251,6 @@ def get_matches(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
-    data = json.loads(request.body)
-    latitude = float(data['latitude'])
-    longitude = float(data['longitude'])
-
-    current_location = Point(longitude, latitude)
-
     matches = [
         {
             "name": match.name,
@@ -275,19 +269,9 @@ def get_matches(request):
 
     return JsonResponse(matches, safe=False)
 
-def get_matches_nearby(request):
+def get_matches_nearby(request, radius):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-    data = json.loads(request.body)
-    latitude = float(data['latitude'])
-    longitude = float(data['longitude'])
-    radius = float(data['radius'])
-
-    if latitude is None or longitude is None or radius is None:
-        return HttpResponse("0: Missing required fields'}", status=400)
-
-    current_location = Point(longitude, latitude)
-
 
     matches = [
         {
@@ -297,12 +281,12 @@ def get_matches_nearby(request):
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
             "radius": match.radius,
-            "distance": distance(current_location, match.createdAtLocation).kilometers,
+            "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
-        for match in Match.objects.all() if distance(current_location, match.createdAtLocation).kilometers < radius
+        for match in Match.objects.all() if distance(request.user.player.location, match.createdAtLocation).kilometers < radius
     ]
     return JsonResponse(matches, safe=False)
 

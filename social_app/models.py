@@ -8,10 +8,10 @@ class Match(models.Model):
     # no need for id field as Django creates auto-incrementing ids
     # for each model
     host = models.CharField(max_length=20, default="")
-    name = models.CharField(max_length=10, default="")
+    name = models.CharField(max_length=25, default="")
 
     # password needed to access the hosted match
-    password = models.CharField(max_length=10, null=True)
+    password = models.CharField(max_length=10, blank=True, null=True)
 
     #players = models.ForeignKey(
     #    Player,
