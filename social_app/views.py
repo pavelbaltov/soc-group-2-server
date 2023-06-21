@@ -322,31 +322,15 @@ def host_match(request):
 
     player = request.user.player
 
-    if hasattr(player, 'match'):
-        # The player has at some point hosted a match, so this is reset to
-        # its initial state.
-        player.match.host = player.user.username
-        player.match.name = name
-        player.match.createdAtLocation = Point(longitude, latitude)
-        player.match.duration = duration
-        player.match.radius = radius
-        player.match.numberOfHiders = number_of_hiders
-        player.match.numberOfHunters = number_of_hunters
-        player.match.save()
-        return HttpResponse(f'1: reset match')
-    else:
-        # The player has never hosted a match, so the default values of the
-        # newly created match are already correct.
-        match = Match(host=player.user.username)
-        match.name = name
-        match.host = player.user.username
-        match.createdAtLocation = Point(longitude, latitude)
-        match.duration = duration
-        match.radius = radius
-        match.numberOfHiders = number_of_hiders
-        match.numberOfHunters = number_of_hunters
-        match.save()
-        return HttpResponse(f'1: created match')
+    player.match.host = player.user.username
+    player.match.name = name
+    player.match.createdAtLocation = Point(longitude, latitude)
+    player.match.duration = duration
+    player.match.radius = radius
+    player.match.numberOfHiders = number_of_hiders
+    player.match.numberOfHunters = number_of_hunters
+    player.match.save()
+    return HttpResponse(f'1: reset match')
 
 
 def join_match(request):
