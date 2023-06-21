@@ -91,19 +91,11 @@ def get_players_nearby(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in!')
 
-    data = json.loads(request.body)
-    latitude = float(data['latitude'])
-    longitude = float(data['longitude'])
-    radius = float(data['radius'])
 
-    if latitude is None or longitude is None or radius is None:
-        return HttpResponse("0: Missing required fields'}", status=400)
-
-    current_location = Point(longitude, latitude)
+    current_location = request.user.player.location
 
     players = [
         {
-            "id": player.user.id,
             "username": player.user.username,
             "latitude": player.location.y,
             "longitude": player.location.x,
@@ -126,7 +118,6 @@ def get_player_by_username(request, username):
 
 
     player = {
-        "id": found_user.id,
         "username": found_user.username,
         "latitude": found_user.player.location.y,
         "longitude": found_user.player.location.x,
@@ -155,10 +146,10 @@ def get_friends(request):
 
     friends = [
         {
-            "id": friend.user.id,
             "username": friend.user.username,
             "latitude": friend.location.y,
-            "longitude": friend.location.x
+            "longitude": friend.location.x,
+            "distance": distance(request.user.player.location, friend.location).kilometers
         }
         for friend in request.user.player.get_friends()
     ]
@@ -228,10 +219,10 @@ def get_friendship_requests(request):
 
     requests = [
         {
-            "id": r.user.id,
             "username": r.user.username,
             "latitude": r.location.y,
-            "longitude": r.location.x
+            "longitude": r.location.x,
+            "distance": distance(request.user.player.location, r.location).kilometers
         }
         for r in requestsOfPlayer
     ]
