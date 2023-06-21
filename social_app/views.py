@@ -307,7 +307,7 @@ def get_matches_of_friends(request):
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders
         }
-        for match in Match.objects.all() if request.user.player.is_friend_with(match.host)
+        for match in Match.objects.all() if request.user.player.is_friend_with(Player.objects.get(user__username=match.host))
     ]
     return JsonResponse(matches, safe=False)
 
