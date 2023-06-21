@@ -326,7 +326,7 @@ def host_match(request):
     player.match.host = player.user.username
     player.match.name = name
     player.match.createdAtLocation = Point(longitude, latitude)
-    player.match.duration = datetime.timedelta(minutes=int(duration))
+    player.match.duration = str(datetime.timedelta(minutes=int(duration)))
     player.match.radius = radius
     player.match.numberOfHiders = number_of_hiders
     player.match.numberOfHunters = number_of_hunters
