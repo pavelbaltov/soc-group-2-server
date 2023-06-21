@@ -359,13 +359,13 @@ def join_match(request):
     hostPlayer = Player.objects.get(user__username=host_name)
 
     if hasattr(hostPlayer, 'match'):
-        if (hostPlayer.match.is_full()):
+        if hostPlayer.match.is_full():
             return HttpResponse(f"0: Match is full")
         else:
-            request.user.player.match = Match.objects.get(host=host)
+            request.user.player.match = Match.objects.get(host=host_name)
             return HttpResponse(f'1: Joined match,')
     else:
-        return HttpResponse(f'0: No match with host {host} exists')
+        return HttpResponse(f'0: No match with host {host_name} exists')
 
 
 def get_match(request):
