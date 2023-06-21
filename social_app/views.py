@@ -363,6 +363,7 @@ def join_match(request):
             return HttpResponse(f"0: Match is full")
         else:
             request.user.player.match = Match.objects.get(host=host_name)
+            request.user.player.save()
             return HttpResponse(f'1: Joined match,')
     else:
         return HttpResponse(f'0: No match with host {host_name} exists')
