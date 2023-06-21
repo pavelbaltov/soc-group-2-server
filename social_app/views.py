@@ -349,7 +349,7 @@ def host_match(request):
         return HttpResponse(f'1: created match')
 
 
-def join_match(request, host):
+def join_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
     if request.method != 'POST':
