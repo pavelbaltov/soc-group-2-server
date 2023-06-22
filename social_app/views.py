@@ -1,8 +1,5 @@
 import json
-from datetime import datetime
 import time
-
-
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
@@ -334,7 +331,9 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetime.time().isoformat()
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    match.createdAtTime = t
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
