@@ -67,9 +67,9 @@ def is_host(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in!')
 
-    if request.user.match is None:
+    if request.user.player.match is None:
         return HttpResponse("0: Not a host")
-    elif request.user.match.host == request.user.username:
+    elif request.user.player.match.host == request.user.username:
         return HttpResponse("1: You are a host")
 
 # FRIENDS LIST:
