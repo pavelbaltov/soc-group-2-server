@@ -316,7 +316,7 @@ def host_match(request):
     name = data['name']
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
-    #duration = int(data['duration'])
+    duration = int(data['duration'])
     radius = float(data['radius'])
     number_of_hunters = int(data['number_of_hunters'])
     number_of_hiders = int(data['number_of_hiders'])

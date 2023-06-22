@@ -34,11 +34,11 @@ class Match(models.Model):
     # redundant: has_started = models.BooleanField(default=False)
     # redundant: is_over = models.BooleanField(default=False)
 
-    def hasStarted(self):
-        if datetime.now() > self.createdAtTime:
-            return True
-        else:
-            return False
+    # def hasStarted(self):
+    #     if datetime.now() > self.createdAtTime:
+    #         return True
+    #     else:
+    #         return False
 
     def is_full(self):
         if self.player_set.count() >= self.numberOfHunters + self.numberOfHiders:
