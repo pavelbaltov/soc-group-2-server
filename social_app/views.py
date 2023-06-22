@@ -332,7 +332,8 @@ def host_match(request):
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
     match.save()
-    player.match.save()
+    player.match = match
+    player.save()
     return HttpResponse(f'1: reset match')
 
 
