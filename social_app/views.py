@@ -1,5 +1,7 @@
 import json
-from datetime import datetime
+import datetime
+import time
+
 
 
 from django.contrib.auth.models import User
@@ -332,7 +334,7 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetime.datetime.now().time().isoformat()
+    match.createdAtTime = datetime.time().isoformat()
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
