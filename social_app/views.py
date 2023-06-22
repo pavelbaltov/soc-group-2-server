@@ -8,8 +8,8 @@ from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
-import datetime, time
-from datetime import datetime
+import datetime
+
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
