@@ -1,4 +1,5 @@
 import json
+import _datetime
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
@@ -8,8 +9,6 @@ from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
-import datetime
-from datetime import datetime as datetimefunc
 
 
 
@@ -332,7 +331,7 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetimefunc.now().isoformat()
+    match.createdAtTime = _datetime.datetime.time().isoformat()
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
