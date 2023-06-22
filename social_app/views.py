@@ -330,7 +330,12 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = str(time.localtime())
+    match.createdAtTime = datetime.datetime.now().isoformat()
+
+    current_time = datetime.now().time()
+
+    # Convert the time to ISO format string
+    current_time_str = current_time.isoformat()
     match.save()
     player.match.save()
     return HttpResponse(f'1: reset match')
