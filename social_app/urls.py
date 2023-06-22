@@ -33,5 +33,6 @@ urlpatterns = [
     path('get_players_in_current_match/', views.get_players_in_current_match),
     path('get_match/', views.get_match),
     path('end_match/', views.end_match),
+    path('exit_match/', views.end_match),
     path('match_ended/', views.match_ended),
 ]

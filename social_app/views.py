@@ -343,7 +343,7 @@ def host_match(request):
     match.save()
     player.match = match
     player.save()
-    return HttpResponse(f'1: reset match')
+    return HttpResponse(f'1: Created match')
 
 
 def join_match(request):
