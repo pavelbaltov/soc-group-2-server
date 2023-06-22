@@ -63,6 +63,14 @@ def signup(request):
     player.save()
     return HttpResponse('0: successful signup')
 
+def is_host(request):
+    if request.method != 'POST':
+        return HttpResponse(f'incorrect request method.')
+
+    if request.user.match is None:
+        return HttpResponse("0: Not a host")
+    elif request.user.match.host == request.user.username:
+        return HttpResponse("1: You are a host")
 
 # FRIENDS LIST:
 # view functions: get_names, get_friends, add_friend,

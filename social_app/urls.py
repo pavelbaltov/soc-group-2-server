@@ -22,6 +22,7 @@ urlpatterns = [
     path('remove_friend/', views.remove_friend),
 
     path('update_location/', views.update_location),
+    path('is_host/', views.is_host),
 
     path('get_matches/', views.get_matches),
     path('get_matches_nearby/<str:radius>/', views.get_matches_nearby),
