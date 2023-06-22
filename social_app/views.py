@@ -421,7 +421,6 @@ def end_match(request):
 
     match = Match.objects.get(host=request.user.username)
     match.delete()
-    request.user.player.save()
     return HttpResponse(f'1: ended match')
 
 def match_ended(request):
