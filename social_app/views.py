@@ -418,12 +418,14 @@ def get_match(request):
 def end_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-    if request.method != 'POST':
-        return HttpResponse(f'incorrect request method.')
-    host_name = request.POST['host']
-    host = Player.objects.get(user__username=host_name)
-    if not hasattr(host, 'match'):
-        return HttpResponse(f'no match with host {host_name} exists')
-    host.match.is_over = True
-    host.match.save()
+
+    request.user.player.match.delete()
+    request.user.player.match = None
     return HttpResponse(f'0: ended match')
+
+def match_ended(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f"Match was ended!")
