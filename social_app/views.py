@@ -64,8 +64,8 @@ def signup(request):
     return HttpResponse('0: successful signup')
 
 def is_host(request):
-    if request.method != 'POST':
-        return HttpResponse(f'incorrect request method.')
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in!')
 
     if request.user.match is None:
         return HttpResponse("0: Not a host")
