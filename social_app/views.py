@@ -421,6 +421,7 @@ def end_match(request):
 
     request.user.player.match.delete()
     request.user.player.match = None
+    request.user.player.save()
     return HttpResponse(f'0: ended match')
 
 def match_ended(request):
