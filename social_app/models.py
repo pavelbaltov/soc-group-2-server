@@ -29,7 +29,7 @@ class Match(models.Model):
 
     # latitude and longitude of the place at which the match was first created
     createdAtLocation = models.PointField(null=True)
-    createdAtTime = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    createdAtTime = models.TimeField(auto_now=False, auto_now_add=True, null=True)
 
     # redundant: has_started = models.BooleanField(default=False)
     # redundant: is_over = models.BooleanField(default=False)
