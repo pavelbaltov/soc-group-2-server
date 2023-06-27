@@ -372,6 +372,7 @@ def exit_match(request):
     if request.user.player.match is None:
         return HttpResponse(f"0: No active match")
     else:
+        request.user.player.role = "NO"
         request.user.player.match = None
         request.user.player.save()
         return HttpResponse(f'1: Exited match')
@@ -427,7 +428,7 @@ def start_match(request):
 def end_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-
+    request.user.player.role = "NO"
     match = Match.objects.get(host=request.user.username)
     match.delete()
     return HttpResponse(f'1: ended match')
@@ -449,3 +450,44 @@ def match_started(request):
         return HttpResponse(f"1: Match has started!")
 
     return HttpResponse(f"0: Match hasn't started!")
+
+def join_hunter(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'Player not in match')
+
+    maxHunters = request.user.player.match.numberOfHunters
+    joinedHunters = request.user.player.match.joinedHunters
+
+    if joinedHunters < maxHunters:
+        if request.user.player.role is "HI":
+            request.user.player.match.joinedHiders -= 1
+
+        request.user.player.match.joinedHunters += 1
+        request.user.player.role = "HU"
+        return HttpResponse(f'1: Player is now hunter')
+    else:
+        return HttpResponse(f'0: Hunter slots are full')
+
+
+def join_hider(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'Player not in match')
+
+    maxHiders = request.user.player.match.numberOfHiders
+    joinedHiders = request.user.player.match.joinedHiders
+
+    if joinedHiders < maxHiders:
+        if request.user.player.role is "HU":
+            request.user.player.match.joinedHunters -= 1
+
+        request.user.player.match.joinedHiders += 1
+        request.user.player.role = "HI"
+        return HttpResponse(f'1: Player is now hunter')
+    else:
+        return HttpResponse(f'0: Hunter slots are full')

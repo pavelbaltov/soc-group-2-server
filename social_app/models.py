@@ -23,6 +23,9 @@ class Match(models.Model):
     numberOfHunters = models.IntegerField(default=2)
     numberOfHiders = models.IntegerField(default=4)
 
+    joinedHunters = models.IntegerField(default=0)
+    joinedHiders = models.IntegerField(default=0)
+
     # time(hour = 0, minute = 0, second = 0)
     duration = models.IntegerField(blank=False, null=True)
     radius = models.FloatField(max_length=10, default=5)
@@ -39,6 +42,13 @@ class Match(models.Model):
         else:
             return False
 
+    def all_ready(self):
+
+        for player in self.player_set.all():
+            if player.role is "NO":
+                return False
+        return True
+
     def __str__(self):
         return self.name
 
@@ -46,6 +56,7 @@ class Player(models.Model):
     ROLE_CHOICES = [
         ("HI", "Hider"),
         ("HU", "Hunter"),
+        ("NO", "Nothing")
     ]
 
     user = models.OneToOneField(
