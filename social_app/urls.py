@@ -41,4 +41,6 @@ urlpatterns = [
     path('join_hunter/', views.join_hunter),
     path('join_hider/', views.join_hider),
 
+    path('get_hiders_locations/', views.get_hiders_locations),
+
 ]

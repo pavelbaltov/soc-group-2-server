@@ -500,3 +500,24 @@ def join_hider(request):
         return HttpResponse(f'1: Player is now hunter')
     else:
         return HttpResponse(f'0: Hunter slots are full')
+
+def get_hiders_locations(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'Player not in match')
+
+    if request.user.player.role != "HU":
+        return HttpResponse(f'0: Not a hunter')
+
+    players = [
+        {
+            "latitude": player.location.y,
+            "longitude": player.location.x,
+        }
+        for player in request.user.player.match.player_set.filter(role="HI")
+    ]
+    return JsonResponse(players, safe=False)
+
+
