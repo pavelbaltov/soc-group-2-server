@@ -414,6 +414,15 @@ def get_match(request):
 
     return JsonResponse(match, safe=False)
 
+def start_match(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match.host is not request.user.username:
+        return HttpResponse(f'0: You are not the host of this match')
+    else:
+        request.user.player.match.has_started = True
+        return HttpResponse(f'1: Started match')
 
 def end_match(request):
     if not request.user.is_authenticated:
@@ -431,3 +440,12 @@ def match_ended(request):
         return HttpResponse(f"1: Match was ended!")
 
     return HttpResponse(f"0: Match hasn't ended!")
+
+def match_started(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match.has_started:
+        return HttpResponse(f"1: Match has started!")
+
+    return HttpResponse(f"0: Match hasn't started!")

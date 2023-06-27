@@ -29,10 +29,12 @@ urlpatterns = [
     path('get_matches_of_friends/', views.get_matches_of_friends),
     path('host_match/', views.host_match),
     path('join_match/', views.join_match),
+    path('start_match/', views.start_match),
     path('end_match/', views.exit_match),
     path('get_players_in_current_match/', views.get_players_in_current_match),
     path('get_match/', views.get_match),
     path('end_match/', views.end_match),
     path('exit_match/', views.exit_match),
     path('match_ended/', views.match_ended),
+    path('match_started/', views.match_started),
 ]
