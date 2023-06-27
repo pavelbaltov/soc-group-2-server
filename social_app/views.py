@@ -266,7 +266,9 @@ def get_matches(request):
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
-            "number_of_hiders": match.numberOfHiders
+            "number_of_hiders": match.numberOfHiders,
+            "number_of_joined_hunters": match.joinedHunters,
+            "number_of_joined_hiders": match.joinedHiders
         }
         for match in Match.objects.all()
     ]
@@ -288,7 +290,9 @@ def get_matches_nearby(request, radius):
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
-            "number_of_hiders": match.numberOfHiders
+            "number_of_hiders": match.numberOfHiders,
+            "number_of_joined_hunters": match.joinedHunters,
+            "number_of_joined_hiders": match.joinedHiders
         }
         for match in Match.objects.all() if distance(request.user.player.location, match.createdAtLocation).kilometers < float(radius)
     ]
@@ -309,7 +313,9 @@ def get_matches_of_friends(request):
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
-            "number_of_hiders": match.numberOfHiders
+            "number_of_hiders": match.numberOfHiders,
+            "number_of_joined_hunters": match.joinedHunters,
+            "number_of_joined_hiders": match.joinedHiders
         }
         for match in Match.objects.all() if request.user.player.is_friend_with(Player.objects.get(user__username=match.host))
     ]
@@ -410,7 +416,9 @@ def get_match(request):
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
-            "number_of_hiders": match.numberOfHiders
+            "number_of_hiders": match.numberOfHiders,
+            "number_of_joined_hunters": match.joinedHunters,
+            "number_of_joined_hiders": match.joinedHiders
     }
 
     return JsonResponse(match, safe=False)
