@@ -417,8 +417,8 @@ def get_match(request):
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
             "number_of_hiders": match.numberOfHiders,
-            "number_of_joined_hunters": match.joinedHunters,
-            "number_of_joined_hiders": match.joinedHiders
+            "number_of_joined_hunters": Player.objects.filter(match=match, role='HU').count(),
+            "number_of_joined_hiders": Player.objects.filter(match=match, role='HI').count()
     }
 
     return JsonResponse(match, safe=False)
