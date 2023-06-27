@@ -42,7 +42,7 @@ class Match(models.Model):
     def all_ready(self):
 
         for player in self.player_set.all():
-            if player.role is "NO":
+            if player.role is None:
                 return False
         return True
 
@@ -52,8 +52,7 @@ class Match(models.Model):
 class Player(models.Model):
     ROLE_CHOICES = [
         ("HI", "Hider"),
-        ("HU", "Hunter"),
-        ("NO", "Nothing")
+        ("HU", "Hunter")
     ]
 
     user = models.OneToOneField(
