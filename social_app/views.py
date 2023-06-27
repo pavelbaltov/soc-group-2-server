@@ -472,9 +472,12 @@ def join_hunter(request):
     if joinedHunters < maxHunters:
         if request.user.player.role == "HI":
             request.user.player.match.joinedHiders -= 1
+            request.user.player.match.save()
 
         request.user.player.match.joinedHunters += 1
+        request.user.player.match.save()
         request.user.player.role = "HU"
+        request.user.player.save()
         return HttpResponse(f'1: Player is now hunter')
     else:
         return HttpResponse(f'0: Hunter slots are full')
@@ -493,9 +496,13 @@ def join_hider(request):
     if joinedHiders < maxHiders:
         if request.user.player.role == "HU":
             request.user.player.match.joinedHunters -= 1
+            request.user.player.match.save()
 
         request.user.player.match.joinedHiders += 1
+        request.user.player.match.save()
         request.user.player.role = "HI"
+        request.user.player.save()
+
         return HttpResponse(f'1: Player is now hunter')
     else:
         return HttpResponse(f'0: Hunter slots are full')
