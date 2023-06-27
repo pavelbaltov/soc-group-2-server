@@ -470,13 +470,13 @@ def join_hunter(request):
     joinedHunters = request.user.player.match.joinedHunters
 
     if joinedHunters < maxHunters:
-        if request.user.player.role == "HI":
+        if request.user.player.role == 'HI':
             request.user.player.match.joinedHiders -= 1
             request.user.player.match.save()
 
         request.user.player.match.joinedHunters += 1
         request.user.player.match.save()
-        request.user.player.role = "HU"
+        request.user.player.role = 'HU'
         request.user.player.save()
         return HttpResponse(f'1: Player is now hunter')
     else:
@@ -494,13 +494,13 @@ def join_hider(request):
     joinedHiders = request.user.player.match.joinedHiders
 
     if joinedHiders < maxHiders:
-        if request.user.player.role == "HU":
+        if request.user.player.role == 'HU':
             request.user.player.match.joinedHunters -= 1
             request.user.player.match.save()
 
         request.user.player.match.joinedHiders += 1
         request.user.player.match.save()
-        request.user.player.role = "HI"
+        request.user.player.role = 'HI'
         request.user.player.save()
 
         return HttpResponse(f'1: Player is now hunter')
