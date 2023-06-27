@@ -469,7 +469,7 @@ def join_hunter(request):
         return HttpResponse(f'0: Player already hunter')
 
     maxHunters = request.user.player.match.numberOfHunters
-    joinedHunters = request.user.player.match.joinedHunters
+    joinedHunters = Player.objects.filter(match=request.user.player.match, role='HU').count()
 
     if joinedHunters < maxHunters:
         if request.user.player.role == 'HI':
@@ -493,9 +493,8 @@ def join_hider(request):
     if request.user.player.role == 'HI':
         return HttpResponse(f'0: Player already hider')
 
-
     maxHiders = request.user.player.match.numberOfHiders
-    joinedHiders = request.user.player.match.joinedHiders
+    joinedHiders = Player.objects.filter(match=request.user.player.match, role='HI').count()
 
     if joinedHiders < maxHiders:
         if request.user.player.role == 'HU':
