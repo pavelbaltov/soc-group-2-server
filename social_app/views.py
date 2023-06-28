@@ -435,12 +435,10 @@ def start_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
-    if request.user.username is not request.user.player.match.host:
-        return HttpResponse(f'0: You {request.user.username }are not the host of {request.user.player.match.host} this match')
-    else:
-        request.user.player.match.has_started = True
-        request.user.player.match.save()
-        return HttpResponse(f'1: Started match')
+
+    request.user.player.match.has_started = True
+    request.user.player.match.save()
+    return HttpResponse(f'1: Started match')
 
 def end_match(request):
 
