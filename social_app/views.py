@@ -437,10 +437,10 @@ def start_match(request):
 def end_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-    request.user.player.role = "NO"
-    match = Match.objects.get(host=request.user.username)
-    match.delete()
-    return HttpResponse(f'1: ended match')
+    request.user.player.role = None
+    request.user.player.save()
+    Match.objects.get(host=request.user.username).delete()
+    return HttpResponse(f'1: Ended match')
 
 def match_ended(request):
     if not request.user.is_authenticated:
