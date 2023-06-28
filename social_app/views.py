@@ -84,14 +84,10 @@ def get_players(request):
         return HttpResponse(f'User not signed in')
 
     non_friend_players = [player for player in Player.objects.all()
-                          if not player.is_friend_with(request.user.player)]
+                          if not player.is_friend_with(request.user.player) and
+                          not FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player)
+                                                               | Q(requester=player, recipient=request.user.player))]
     non_friend_players.remove(request.user.player)
-
-    to_show_players = [
-        player for player in non_friend_players
-        if not FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player)
-                                                | Q(requester=player, recipient=request.user.player)).exists()
-    ]
 
     players = [
         {
@@ -101,7 +97,7 @@ def get_players(request):
             "longitude": player.location.x,
             "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
         }
-        for player in to_show_players
+        for player in non_friend_players
     ]
 
     return JsonResponse(players, safe=False)
