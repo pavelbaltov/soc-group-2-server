@@ -431,6 +431,7 @@ def start_match(request):
         return HttpResponse(f'0: You are not the host of this match')
     else:
         request.user.player.match.has_started = True
+        request.user.player.match.save()
         return HttpResponse(f'1: Started match')
 
 def end_match(request):
@@ -503,10 +504,10 @@ def join_hider(request):
 
 def get_hiders_locations(request):
     if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
+        return HttpResponse(f'0: User not signed in')
 
     if request.user.player.match is None:
-        return HttpResponse(f'Player not in match')
+        return HttpResponse(f'0: Player not in match')
 
     if request.user.player.role != "HU":
         return HttpResponse(f'0: Not a hunter')
