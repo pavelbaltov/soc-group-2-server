@@ -10,6 +10,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
 
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
@@ -378,7 +380,7 @@ def exit_match(request):
     if request.user.player.match is None:
         return HttpResponse(f"0: No active match")
     else:
-        request.user.player.role = "NO"
+        request.user.player.role = None
         request.user.player.match = None
         request.user.player.save()
         return HttpResponse(f'1: Exited match')
@@ -435,13 +437,14 @@ def start_match(request):
         return HttpResponse(f'1: Started match')
 
 def end_match(request):
-    if not request.user.is_authenticated:
-        return HttpResponse(f'user not signed in')
-    request.user.player.role = None
-    request.user.player.save()
-    Match.objects.get(host=request.user.username).delete()
-    return HttpResponse(f'1: Ended match')
-
+    try:
+        match = Match.objects.get(host=request.user.username)
+        match.delete()
+        request.user.player.role = None
+        request.user.player.save()
+        return HttpResponse('1: Match ended successfully')
+    except ObjectDoesNotExist:
+        return HttpResponse('0: No match found for the host')
 def match_ended(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
