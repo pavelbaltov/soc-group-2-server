@@ -339,6 +339,11 @@ def host_match(request):
     number_of_hiders = int(data['number_of_hiders'])
 
     player = request.user.player
+
+    if player.match is not None and player.match.host is player.user.username:
+        match = Match.objects.get(host=request.user.username)
+        match.delete()
+
     match = Match()
     match.host = player.user.username
     match.name = name
