@@ -63,7 +63,7 @@ def signup(request):
     player = Player(user=user)
     # Don't forget to save at the end of all the changes to table contents
     player.save()
-    return HttpResponse('0: successful signup')
+    return HttpResponse('1: successful signup')
 
 def is_host(request):
     if not request.user.is_authenticated:
