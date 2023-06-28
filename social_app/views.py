@@ -37,9 +37,9 @@ def signin(request):
     # authenticate() only returns a user if username and password are correct
     user = authenticate(request, username=username, password=password)
     if user is None:
-        return HttpResponse(f'could not authenticate.')
+        return HttpResponse(f'Could not authenticate.')
     login(request, user)
-    return HttpResponse('0: successful signin')
+    return HttpResponse('1: successful signin')
 
 
 def signup(request):
