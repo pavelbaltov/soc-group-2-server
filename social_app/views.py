@@ -87,10 +87,11 @@ def get_players(request):
                           if not player.is_friend_with(request.user.player)]
     non_friend_players.remove(request.user.player)
 
-    for player in non_friend_players:
-        is_request = FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player) | Q(requester=player, recipient=request.user.player)).exists()
-        if is_request:
-            non_friend_players.remove(player)
+    to_show_players = [
+        player for player in non_friend_players
+        if not FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player)
+                                                | Q(requester=player, recipient=request.user.player)).exists()
+    ]
 
     players = [
         {
@@ -100,7 +101,7 @@ def get_players(request):
             "longitude": player.location.x,
             "distance": round(distance(request.user.player.location, player.location).kilometers, 2)
         }
-        for player in non_friend_players
+        for player in to_show_players
     ]
 
     return JsonResponse(players, safe=False)
