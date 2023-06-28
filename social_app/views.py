@@ -437,6 +437,7 @@ def start_match(request):
         return HttpResponse(f'1: Started match')
 
 def end_match(request):
+    return HttpResponse("Ended MATCH")
     try:
         match = Match.objects.get(host=request.user.username)
         match.delete()
@@ -445,6 +446,7 @@ def end_match(request):
         return HttpResponse('1: Match ended successfully')
     except ObjectDoesNotExist:
         return HttpResponse('0: No match found for the host')
+
 def match_ended(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
