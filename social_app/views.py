@@ -373,6 +373,7 @@ def join_match(request):
     else:
         return HttpResponse(f'0: No match with host {host_name} exists')
 
+
 def exit_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
@@ -437,7 +438,6 @@ def start_match(request):
         return HttpResponse(f'1: Started match')
 
 def end_match(request):
-    return HttpResponse("Ended MATCH")
     try:
         match = Match.objects.get(host=request.user.username)
         match.delete()
