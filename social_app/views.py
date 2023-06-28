@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 
 from .models import Player, Friendship, Match, FriendshipRequest
@@ -85,6 +86,11 @@ def get_players(request):
     non_friend_players = [player for player in Player.objects.all()
                           if not player.is_friend_with(request.user.player)]
     non_friend_players.remove(request.user.player)
+
+    for player in non_friend_players:
+        is_request = FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player) | Q(requester=player, recipient=request.user.player)).exists()
+        if is_request:
+            non_friend_players.remove(player)
 
     players = [
         {
@@ -216,9 +222,21 @@ def respond_friendship_request(request):
     frRe = FriendshipRequest.objects.get(requester=requester.player, recipient=recipient.player)
     if response:
         frRe.accept()
+        duplicate_request_exist = FriendshipRequest.objects.filter(
+            requester=recipient.player, recipient=requester.player
+        ).exists()
+        if duplicate_request_exist:
+            duplicate_request = FriendshipRequest.objects.filter(requester=recipient.player, recipient=requester.player)
+            duplicate_request.delete()
         return HttpResponse("1: Friendship request accepted successfully", status=200)
     else:
         frRe.decline()
+        duplicate_request_exist = FriendshipRequest.objects.filter(
+            requester=recipient.player, recipient=requester.player
+        ).exists()
+        if duplicate_request_exist:
+            duplicate_request = FriendshipRequest.objects.filter(requester=recipient.player, recipient=requester.player)
+            duplicate_request.delete()
         return HttpResponse("1: Friendship request declined successfully", status=200)
 
 def get_friendship_requests(request):
