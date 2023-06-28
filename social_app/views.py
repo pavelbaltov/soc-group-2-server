@@ -86,7 +86,7 @@ def get_players(request):
     non_friend_players = [player for player in Player.objects.all()
                           if not player.is_friend_with(request.user.player) and
                           not FriendshipRequest.objects.filter(Q(requester=request.user.player, recipient=player)
-                                                               | Q(requester=player, recipient=request.user.player))]
+                                                               | Q(requester=player, recipient=request.user.player)).exists()]
     non_friend_players.remove(request.user.player)
 
     players = [
