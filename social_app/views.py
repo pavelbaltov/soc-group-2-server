@@ -438,7 +438,7 @@ def start_match(request):
         return HttpResponse(f'1: Started match')
 
 def end_match(request):
-    return HttpResponse('Testing end_match')
+
     try:
         match = Match.objects.get(host=request.user.username)
         match.delete()
