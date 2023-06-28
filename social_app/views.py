@@ -71,9 +71,13 @@ def is_host(request):
         return HttpResponse(f'User not signed in!')
 
     if request.user.player.match is None:
+        return HttpResponse("0: Not in a match")
+    elif request.user.player.match.host is not request.user.username:
         return HttpResponse("0: Not a host")
     elif request.user.player.match.host == request.user.username:
         return HttpResponse("1: You are a host")
+
+    return HttpResponse("0: Cannot decide if you are a host :?")
 
 # FRIENDS LIST:
 # view functions: get_names, get_friends, add_friend,
