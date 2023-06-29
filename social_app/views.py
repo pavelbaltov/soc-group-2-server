@@ -454,6 +454,8 @@ def start_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
+    if request.user.player.match.player_set.count() < 2:
+        return HttpResponse(f'0: Not enough players')
 
     request.user.player.match.has_started = True
     request.user.player.match.save()
