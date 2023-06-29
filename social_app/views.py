@@ -316,6 +316,7 @@ def get_matches_nearby(request, radius):
             "number_of_joined_hiders": Player.objects.filter(match=match, role='HI').count()
         }
         for match in Match.objects.all() if distance(request.user.player.location, match.createdAtLocation).kilometers < float(radius)
+                                            and match.has_started is False and match.is_full() is False
     ]
     return JsonResponse(matches, safe=False)
 
