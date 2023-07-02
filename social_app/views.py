@@ -493,6 +493,9 @@ def all_ready(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
+    if request.user.player.match.player_set.count() < 2:
+        return HttpResponse(f'0: Not enough players')
+
     if request.user.player.match.all_ready() is False:
         return HttpResponse(f'0: Not all players are ready')
     else:
