@@ -406,7 +406,20 @@ def become_ready(request):
         return HttpResponse(f"0: No active match")
 
     request.user.player.ready = True
+    request.user.player.save()
     return HttpResponse(f"1: You're ready!")
+
+def become_unready(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f"0: No active match")
+
+    request.user.player.ready = False
+    request.user.player.save()
+
+    return HttpResponse(f"1: You're unready!")
 
 def exit_match(request):
     if not request.user.is_authenticated:

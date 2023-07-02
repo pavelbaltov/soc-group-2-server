@@ -37,6 +37,7 @@ urlpatterns = [
     path('match_ended/', views.match_ended),
     path('match_started/', views.match_started),
     path('become_ready/', views.become_ready),
+    path('become_unready/', views.become_unready),
     path('all_ready/', views.all_ready),
 
     path('join_hunter/', views.join_hunter),
