@@ -89,6 +89,10 @@ class Player(models.Model):
         friends = [f.get_friend_of_player(self) for f in friendships]
         return friends
 
+    def get_experience_with(self, friend):
+        friendship = Friendship.objects.filter(Q(player=self, friend=friend) | Q(player=friend, friend=self))
+        return friendship.get().experience
+
     def get_requests(self):
         friendship_requests = FriendshipRequest.objects.filter(recipient=self.user.id)
         requests = [r.requester for r in friendship_requests]
