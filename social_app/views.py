@@ -170,7 +170,8 @@ def get_friends(request):
             "username": friend.user.username,
             "latitude": friend.location.y,
             "longitude": friend.location.x,
-            "distance": round(distance(request.user.player.location, friend.location).kilometers, 2)
+            "distance": round(distance(request.user.player.location, friend.location).kilometers, 2),
+            "experience": Friendship.objects.get(player=request.user.player, friend=friend).experience,
         }
         for friend in request.user.player.get_friends()
     ]
@@ -453,6 +454,15 @@ def get_players_in_current_match(request):
     ]
     return JsonResponse(players, safe=False)
 
+
+def get_match_afe(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+    if request.user.player.match is None:
+        return HttpResponse(f"0: No active match")
+
+    return HttpResponse(request.user.player.match.get_average_friendship_experience())
+
 def get_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in!')
@@ -594,6 +604,25 @@ def get_hiders_locations(request):
             "longitude": player.location.x,
         }
         for player in request.user.player.match.player_set.filter(role="HI")
+    ]
+    return JsonResponse(players, safe=False)
+
+def get_hunters_locations(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    if request.user.player.role != "HU":
+        return HttpResponse(f'0: Not a hunter')
+
+    players = [
+        {
+            "latitude": player.location.y,
+            "longitude": player.location.x,
+        }
+        for player in request.user.player.match.player_set.filter(role="HU")
     ]
     return JsonResponse(players, safe=False)
 

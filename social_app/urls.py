@@ -39,10 +39,12 @@ urlpatterns = [
     path('become_ready/', views.become_ready),
     path('become_unready/', views.become_unready),
     path('all_ready/', views.all_ready),
+    path('get_match_afe/', views.get_match_afe),
 
     path('join_hunter/', views.join_hunter),
     path('join_hider/', views.join_hider),
 
     path('get_hiders_locations/', views.get_hiders_locations),
+    path('get_hunters_locations/', views.get_hunters_locations),
 
 ]
