@@ -171,7 +171,7 @@ def get_friends(request):
             "latitude": friend.location.y,
             "longitude": friend.location.x,
             "distance": round(distance(request.user.player.location, friend.location).kilometers, 2),
-            "experience": Friendship.objects.get(player=request.user.player, friend=friend).experience,
+            "experience": Friendship.objects.get(Q(player=player, friend=friend) | Q(player=friend, friend=player)).experience,
         }
         for friend in request.user.player.get_friends()
     ]
