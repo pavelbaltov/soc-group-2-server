@@ -398,6 +398,15 @@ def join_match(request):
     else:
         return HttpResponse(f'0: No match with host {host_name} exists')
 
+def become_ready(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f"0: No active match")
+
+    request.user.player.ready = True
+    return HttpResponse(f"1: You're ready!")
 
 def exit_match(request):
     if not request.user.is_authenticated:
@@ -408,6 +417,7 @@ def exit_match(request):
     else:
         request.user.player.role = None
         request.user.player.match = None
+        request.user.player.ready = False
         request.user.player.save()
         return HttpResponse(f'1: Exited match')
 
@@ -458,6 +468,9 @@ def start_match(request):
     if request.user.player.match.player_set.count() < 2:
         return HttpResponse(f'0: Not enough players')
 
+    if request.user.player.match.all_ready() is False:
+        return HttpResponse(f'00: Not all players are ready')
+
     request.user.player.match.has_started = True
     request.user.player.match.save()
     return HttpResponse(f'1: Started match')
@@ -468,6 +481,7 @@ def end_match(request):
         match = Match.objects.get(host=request.user.username)
         match.delete()
         request.user.player.role = None
+        request.user.player.ready = False
         request.user.player.save()
         return HttpResponse('1: Match ended successfully')
     except ObjectDoesNotExist:

@@ -40,11 +40,24 @@ class Match(models.Model):
             return False
 
     def all_ready(self):
-
         for player in self.player_set.all():
-            if player.role is None:
+            if player.ready is False:
                 return False
         return True
+
+    def get_average_friendship_experience(self):
+        friendships = []
+        for player1 in self.player_set.all():
+            for player2 in self.player_set.all():
+                if player1 is player2:
+                    continue
+                if Friendship.objects.filter(player=player1, friend=player2).exists():
+                    toAdd = Friendship.objects.get(player=player1, friend=player2)
+                    if toAdd not in friendships:
+                        friendships.append(toAdd)
+
+        average_experience = sum(friendship.experience for friendship in friendships) / len(friendships)
+        return average_experience
 
     def __str__(self):
         return self.name
@@ -61,6 +74,8 @@ class Player(models.Model):
         primary_key=True,
     )
     role = models.CharField(max_length=10, blank=True,  null=True, choices=ROLE_CHOICES)
+
+    ready = models.BooleanField(default=False)
 
     # represents the GPS location of a player
     location = models.PointField(null=True)
@@ -121,6 +136,8 @@ class Friendship(models.Model):
         on_delete=models.CASCADE,
         related_name='friendTo',
     )
+
+    experience = models.IntegerField(default=0)
     def get_friend_of_player(self, player_to_inspect):
         if player_to_inspect.user.id == self.player.user.id:
             return self.friend
