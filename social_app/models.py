@@ -56,6 +56,8 @@ class Match(models.Model):
                     if toAdd not in friendships:
                         friendships.append(toAdd)
 
+        if len(friendships) == 0:
+            return 0;
         average_experience = sum(friendship.experience for friendship in friendships) / len(friendships)
         return average_experience
 
