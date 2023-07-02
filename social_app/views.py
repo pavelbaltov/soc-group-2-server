@@ -424,6 +424,8 @@ def exit_match(request):
 def get_players_in_current_match(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'User not signed in!')
+    if request.user.player.match is None:
+        return HttpResponse(f"0: There is no active match!")
 
     players = [
         {
@@ -490,6 +492,8 @@ def end_match(request):
 def match_ended(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
+    if request.user.player.match is None:
+        return HttpResponse(f"0: There is no active match!")
 
     if request.user.player.match is None:
         return HttpResponse(f"1: Match was ended!")
@@ -499,6 +503,9 @@ def match_ended(request):
 def match_started(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f"0: There is no active match!")
 
     if request.user.player.match.has_started:
         return HttpResponse(f"1: Match has started!")
