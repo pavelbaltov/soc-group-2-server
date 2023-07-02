@@ -146,6 +146,8 @@ def get_player_by_username(request, username):
     return JsonResponse(player, safe=False)
 
 def update_location(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'User not signed in')
 
     data = json.loads(request.body)
     latitude = float(data['latitude'])
