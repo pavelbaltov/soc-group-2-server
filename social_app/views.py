@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
@@ -626,4 +626,7 @@ def get_hunters_locations(request):
     ]
     return JsonResponse(players, safe=False)
 
+def get_server_time(request):
+    server_time = timezone.now().isoformat()
+    return JsonResponse({'server_time': server_time})
 

@@ -47,4 +47,6 @@ urlpatterns = [
     path('get_hiders_locations/', views.get_hiders_locations),
     path('get_hunters_locations/', views.get_hunters_locations),
 
+    path('get_server_time/', views.get_server_time),
+
 ]
