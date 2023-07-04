@@ -12,7 +12,7 @@ from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance
 
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime, timezone
+from django.utils import timezone
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
@@ -375,7 +375,7 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetime.now().time().isoformat()
+    #match.createdAtTime = datetime.now().time().isoformat()
     match.save()
     player.match = match
     player.save()
@@ -627,6 +627,6 @@ def get_hunters_locations(request):
     return JsonResponse(players, safe=False)
 
 def get_server_time(request):
-    server_time = datetime.timezone.now().isoformat()
+    server_time = timezone.localtime(timezone.now()).isoformat()
     return JsonResponse({'server_time': server_time})
 
