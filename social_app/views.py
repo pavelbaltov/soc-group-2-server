@@ -1,5 +1,5 @@
 import json
-
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
@@ -9,10 +9,10 @@ from django.http import HttpResponse, JsonResponse
 from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
-from geopy.distance import distance
+from geopy.distance import distance, Distance
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone
+
 
 
 # USER AUTHENTICATION: check_auth, signout, signin, signup
@@ -375,7 +375,7 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    #match.createdAtTime = datetime.now().time().isoformat()
+    match.createdAtTime = datetime.now().time().isoformat()
     match.save()
     player.match = match
     player.save()
@@ -614,8 +614,8 @@ def get_hunters_locations(request):
     if request.user.player.match is None:
         return HttpResponse(f'0: Player not in match')
 
-    if request.user.player.role != "HU":
-        return HttpResponse(f'0: Not a hunter')
+    if request.user.player.role != "HI":
+        return HttpResponse(f'0: Not a hider')
 
     players = [
         {
@@ -626,7 +626,53 @@ def get_hunters_locations(request):
     ]
     return JsonResponse(players, safe=False)
 
-def get_server_time(request):
-    server_time = timezone.localtime(timezone.now()).isoformat()
-    return JsonResponse({'server_time': server_time})
+def check_if_caught(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
 
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    if request.user.player.is_caught:
+        return HttpResponse(f'1: You are caught')
+    elif not request.user.player.is_caught:
+        return HttpResponse(f'0: You are not caught')
+
+def catch_hider(request, caught_player_username):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    if request.user.player.role != "HU":
+        return HttpResponse(f'0: You are not Hunter!')
+
+    try:
+        caught_player = Player.objects.get(user__username=caught_player_username)
+        caught_player.is_caught = True
+        caught_player.save()
+        return HttpResponse('1: Player caught successfully')
+    except Player.DoesNotExist:
+        return HttpResponse('0: Player not found')
+
+
+def check_if_hider_nearby(request, max_radius_m):
+    hiders = request.user.player.match.player_set.filter(role="HI")
+
+    if hiders is None:
+        return HttpResponse(f"2: You win! No hiders!")
+
+    maxNearestHiderDistance = 10000000
+    nearestHider = hiders[0]
+
+    for hider in hiders:
+        distanceToHider = Distance(hider.location, request.user.player.location).m
+        if distanceToHider < maxNearestHiderDistance:
+            nearestHider = hider
+            maxNearestHiderDistance = distanceToHider
+
+    if Distance(nearestHider.location, request.user.player.location).m < float(max_radius_m):
+        return HttpResponse(f"1: {nearestHider.user.username}")
+    else:
+        return HttpResponse(f"0: No hiders around you!")

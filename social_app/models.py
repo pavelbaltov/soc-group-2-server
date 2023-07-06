@@ -78,6 +78,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, blank=True,  null=True, choices=ROLE_CHOICES)
 
     ready = models.BooleanField(default=False)
+    is_caught = models.BooleanField(default=False)
 
     # represents the GPS location of a player
     location = models.PointField(null=True)
