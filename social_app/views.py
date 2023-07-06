@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Point
@@ -10,7 +9,7 @@ from .models import Player, Friendship, Match, FriendshipRequest
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from geopy.distance import distance, Distance
-
+from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -658,6 +657,11 @@ def catch_hider(request, caught_player_username):
 
 
 def check_if_hider_nearby(request, max_radius_m):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
     hiders = request.user.player.match.player_set.filter(role="HI")
 
     if hiders is None:
@@ -676,3 +680,25 @@ def check_if_hider_nearby(request, max_radius_m):
         return HttpResponse(f"1: {nearestHider.user.username}")
     else:
         return HttpResponse(f"0: No hiders around you!")
+
+def check_if_match_ended(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    if request.user.player.role == "HI":
+        #if hunters are zero -> the game is
+        return HttpResponse("blabla")
+        # check if you game's ended for a hider
+
+    if request.user.player.role == "HU":
+
+        return HttpResponse("blabla")
+        # check if you game's ended for a hunter
+
+
+def get_server_time(request):
+    server_time = timezone.localtime(timezone.now()).isoformat()
+    return JsonResponse({'server_time': server_time})

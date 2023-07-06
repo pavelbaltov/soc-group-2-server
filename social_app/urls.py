@@ -46,6 +46,7 @@ urlpatterns = [
 
     path('get_hiders_locations/', views.get_hiders_locations),
     path('get_hunters_locations/', views.get_hunters_locations),
+    path('get_server_time/', views.get_server_time),
 
     path('check_if_caught/', views.check_if_caught),
     path('catch_hider/<str:caught_player_username>', views.catch_hider),
