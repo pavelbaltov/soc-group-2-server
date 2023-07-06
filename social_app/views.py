@@ -374,7 +374,6 @@ def host_match(request):
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
-    match.createdAtTime = datetime.now().time().isoformat()
     match.save()
     player.match = match
     player.save()
