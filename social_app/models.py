@@ -40,6 +40,9 @@ class Match(models.Model):
             return False
 
     def all_ready(self):
+        if self.player_set.count() < 2:
+            return False
+
         for player in self.player_set.all():
             if player.ready is False:
                 return False

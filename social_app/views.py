@@ -508,7 +508,7 @@ def all_ready(request):
     if request.user.player.match.all_ready() is False:
         return HttpResponse(f'0: Not all players are ready')
     else:
-        return HttpResponse(f'1: All players are ready!')
+        return HttpResponse(f'1: All players are ready! {request.user.player.match.player_set.count()}')
 
 def end_match(request):
 
