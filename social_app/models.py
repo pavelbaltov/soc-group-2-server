@@ -10,21 +10,13 @@ class Match(models.Model):
     host = models.CharField(max_length=20, default="")
     name = models.CharField(max_length=25, default="")
 
-    # password needed to access the hosted match
-    password = models.CharField(max_length=10, blank=True, null=True)
-
-    #players = models.ForeignKey(
-    #    Player,
-    #    on_delete=models.CASCADE,
-    #    related_name='playersInMatch',
-    #    null=True
-    #)
-
     numberOfHunters = models.IntegerField(default=2)
     numberOfHiders = models.IntegerField(default=4)
 
     # time(hour = 0, minute = 0, second = 0)
     duration = models.IntegerField(blank=False, null=True)
+    hiding_duration = models.IntegerField(blank=False, null=True)
+    hint_interval_duration = models.IntegerField(blank=False, null=True)
     radius = models.FloatField(max_length=10, default=5)
 
     # latitude and longitude of the place at which the match was first created

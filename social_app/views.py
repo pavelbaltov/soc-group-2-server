@@ -285,6 +285,8 @@ def get_matches(request):
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
+            "hiding_duration": match.hiding_duration,
+            "hint_interval_duration": match.hint_interval_duration,
             "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
@@ -309,6 +311,8 @@ def get_matches_nearby(request, radius):
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
+            "hiding_duration": match.hiding_duration,
+            "hint_interval_duration": match.hint_interval_duration,
             "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
@@ -333,6 +337,8 @@ def get_matches_of_friends(request):
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
+            "hiding_duration": match.hiding_duration,
+            "hint_interval_duration": match.hint_interval_duration,
             "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
@@ -356,6 +362,8 @@ def host_match(request):
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
     duration = int(data['duration'])
+    hiding_duration = int(data['hiding_duration'])
+    hint_interval_duration = int(data['hint_interval_duration'])
     radius = float(data['radius'])
     number_of_hunters = int(data['number_of_hunters'])
     number_of_hiders = int(data['number_of_hiders'])
@@ -371,6 +379,8 @@ def host_match(request):
     match.name = name
     match.createdAtLocation = Point(longitude, latitude)
     match.duration = duration
+    match.hiding_duration = hiding_duration
+    match.hint_interval_duration = hint_interval_duration
     match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
@@ -476,6 +486,8 @@ def get_match(request):
             "latitude": match.createdAtLocation.y,
             "longitude": match.createdAtLocation.x,
             "duration": match.duration,
+            "hiding_duration": match.hiding_duration,
+            "hint_interval_duration": match.hint_interval_duration,
             "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
