@@ -17,7 +17,6 @@ class Match(models.Model):
     duration = models.IntegerField(blank=False, null=True)
     hiding_duration = models.IntegerField(blank=False, null=True)
     hint_interval_duration = models.IntegerField(blank=False, null=True)
-    radius = models.FloatField(max_length=10, default=5)
 
     # latitude and longitude of the place at which the match was first created
     createdAtLocation = models.PointField(null=True)

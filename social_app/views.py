@@ -287,7 +287,6 @@ def get_matches(request):
             "duration": match.duration,
             "hiding_duration": match.hiding_duration,
             "hint_interval_duration": match.hint_interval_duration,
-            "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
@@ -313,7 +312,6 @@ def get_matches_nearby(request, radius):
             "duration": match.duration,
             "hiding_duration": match.hiding_duration,
             "hint_interval_duration": match.hint_interval_duration,
-            "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
@@ -339,7 +337,6 @@ def get_matches_of_friends(request):
             "duration": match.duration,
             "hiding_duration": match.hiding_duration,
             "hint_interval_duration": match.hint_interval_duration,
-            "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
@@ -364,7 +361,6 @@ def host_match(request):
     duration = int(data['duration'])
     hiding_duration = int(data['hiding_duration'])
     hint_interval_duration = int(data['hint_interval_duration'])
-    radius = float(data['radius'])
     number_of_hunters = int(data['number_of_hunters'])
     number_of_hiders = int(data['number_of_hiders'])
 
@@ -488,7 +484,6 @@ def get_match(request):
             "duration": match.duration,
             "hiding_duration": match.hiding_duration,
             "hint_interval_duration": match.hint_interval_duration,
-            "radius": match.radius,
             "distance": distance(request.user.player.location, match.createdAtLocation).kilometers,
             "number_of_joined_players": match.player_set.count(),
             "number_of_hunters": match.numberOfHunters,
