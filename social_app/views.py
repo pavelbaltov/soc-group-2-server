@@ -435,10 +435,15 @@ def exit_match(request):
         return HttpResponse(f"0: No active match")
     else:
         request.user.player.role = None
+        match = request.user.player.match
         request.user.player.match = None
         request.user.player.ready = False
         request.user.player.is_caught = False
         request.user.player.save()
+        if Player.objects.filter(match=match).count() == 0:
+            match.delete()
+            return HttpResponse('1: Exited and ended match')
+
         return HttpResponse(f'1: Exited match')
 
 def get_players_in_current_match(request):
@@ -689,7 +694,7 @@ def check_if_hider_nearby(request, max_radius_m):
     else:
         return HttpResponse(f"0: No hiders around you!")
 
-def check_if_match_ended(request):
+def check_if_match_suddenly_ended(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'0: User not signed in')
 
@@ -697,13 +702,14 @@ def check_if_match_ended(request):
         return HttpResponse(f'0: Player not in match')
 
     if request.user.player.role == "HI":
-        #if hunters are zero -> the game is
-        return HttpResponse("blabla")
+        if Player.objects.filter(match=request.user.player.match, role='HU').count() == 0:
+            return HttpResponse("0: No hunters!?")
         # check if you game's ended for a hider
 
     if request.user.player.role == "HU":
+        if Player.objects.filter(match=request.user.player.match, role='HI').count() == 0:
+            return HttpResponse("0: No hiders!?")
 
-        return HttpResponse("blabla")
         # check if you game's ended for a hunter
 
 
