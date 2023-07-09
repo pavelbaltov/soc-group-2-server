@@ -440,7 +440,7 @@ def exit_match(request):
         request.user.player.ready = False
         request.user.player.is_caught = False
         request.user.player.save()
-        if Player.objects.filter(match=match).count() == 0:
+        if match.player_set.count() == 0:
             match.delete()
             return HttpResponse('1: Exited and ended match')
 
