@@ -377,7 +377,6 @@ def host_match(request):
     match.duration = duration
     match.hiding_duration = hiding_duration
     match.hint_interval_duration = hint_interval_duration
-    match.radius = radius
     match.numberOfHiders = number_of_hiders
     match.numberOfHunters = number_of_hunters
     match.save()
