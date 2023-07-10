@@ -710,7 +710,7 @@ def check_if_match_suddenly_ended(request):
         if Player.objects.filter(match=request.user.player.match, role='HI').count() == 0:
             return HttpResponse("0: No hiders!?")
 
-        # check if you game's ended for a hunter
+    return HttpResponse("1: OK")
 
 
 def get_server_time(request):
