@@ -55,6 +55,6 @@ urlpatterns = [
     path('check_if_match_suddenly_ended/', views.check_if_match_suddenly_ended),
 
     path('become_invisible/', views.become_invisible),
-    path('become_visible/', views.become_invisible),
+    path('become_visible/', views.become_visible),
 
 ]
