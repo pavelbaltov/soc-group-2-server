@@ -439,6 +439,7 @@ def exit_match(request):
         request.user.player.match = None
         request.user.player.ready = False
         request.user.player.is_caught = False
+        request.user.player.is_invisible = False
         request.user.player.save()
         if match.player_set.count() == 0:
             match.delete()
@@ -530,6 +531,8 @@ def end_match(request):
         request.user.player.match = None
         request.user.player.ready = False
         request.user.player.is_caught = False
+        request.user.player.is_invisible = False
+
         request.user.player.save()
         return HttpResponse('1: Match ended successfully')
     except ObjectDoesNotExist:
