@@ -73,6 +73,7 @@ class Player(models.Model):
 
     ready = models.BooleanField(default=False)
     is_caught = models.BooleanField(default=False)
+    is_invisible = models.BooleanField(default=False)
 
     # represents the GPS location of a player
     location = models.PointField(null=True)

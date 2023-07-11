@@ -52,6 +52,9 @@ urlpatterns = [
     path('catch_hider/<str:caught_player_username>', views.catch_hider),
     path('check_if_hider_nearby/<str:max_radius_m>', views.check_if_hider_nearby),
 
-    path('check_if_match_suddenly_ended/', views.check_if_match_suddenly_ended)
+    path('check_if_match_suddenly_ended/', views.check_if_match_suddenly_ended),
+
+    path('become_invisible/', views.become_invisible),
+    path('become_visible/', views.become_invisible),
 
 ]

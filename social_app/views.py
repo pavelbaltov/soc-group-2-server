@@ -615,7 +615,7 @@ def get_hiders_locations(request):
             "latitude": player.location.y,
             "longitude": player.location.x,
         }
-        for player in request.user.player.match.player_set.filter(role="HI")
+        for player in request.user.player.match.player_set.filter(role="HI", is_invisible=False)
     ]
     return JsonResponse(players, safe=False)
 
@@ -716,3 +716,26 @@ def check_if_match_suddenly_ended(request):
 def get_server_time(request):
     server_time = timezone.localtime(timezone.now()).isoformat()
     return JsonResponse({'server_time': server_time})
+
+def become_invisible(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    request.user.player.is_invisible = True
+    request.user.player.save()
+    return HttpResponse(f'1: Player is now invisible!')
+
+
+def become_visible(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    request.user.player.is_invisible = False
+    request.user.player.save()
+    return HttpResponse(f'1: Player is now visible!')
