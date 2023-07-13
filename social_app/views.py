@@ -743,5 +743,12 @@ def become_visible(request):
     request.user.player.save()
     return HttpResponse(f'1: Player is now visible!')
 
+def update_experience_with_friends(request, experience):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    request.user.player.update_experience_with_friends(int(experience))
+    request.user.player.save()
+    return HttpResponse(f"1: Updated experience with friends!")
 
 

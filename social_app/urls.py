@@ -57,5 +57,6 @@ urlpatterns = [
     path('become_invisible/', views.become_invisible),
     path('become_visible/', views.become_visible),
 
+    path('update_experience_with_friends/<str:experience>/', views.update_experience_with_friends)
 
 ]
