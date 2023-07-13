@@ -680,7 +680,7 @@ def check_if_hider_nearby(request, max_radius_m):
         return HttpResponse(f'0: Player not in match')
     hiders = request.user.player.match.player_set.filter(role="HI")
 
-    if hiders is None:
+    if hiders.count() == 0:
         return HttpResponse(f"2: You win! No hiders!")
 
     maxNearestHiderDistance = 10000000
