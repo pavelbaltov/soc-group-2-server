@@ -57,4 +57,5 @@ urlpatterns = [
     path('become_invisible/', views.become_invisible),
     path('become_visible/', views.become_visible),
 
+
 ]

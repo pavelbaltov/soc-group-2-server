@@ -693,7 +693,7 @@ def check_if_hider_nearby(request, max_radius_m):
             maxNearestHiderDistance = distanceToHider
 
     if Distance(nearestHider.location, request.user.player.location).m < float(max_radius_m):
-        return HttpResponse(f"1: {nearestHider.user.username}")
+        return HttpResponse(f"1:{nearestHider.user.username}")
     else:
         return HttpResponse(f"0: No hiders around you!")
 
@@ -742,3 +742,6 @@ def become_visible(request):
     request.user.player.is_invisible = False
     request.user.player.save()
     return HttpResponse(f'1: Player is now visible!')
+
+
+
