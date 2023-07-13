@@ -303,7 +303,7 @@ def get_matches_nearby(request, radius):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
-    radius.replace(',','.')
+    radius.replace(',', '.')
     matches = [
         {
             "name": match.name,
@@ -677,7 +677,7 @@ def check_if_hider_nearby(request, max_radius_m):
 
     if request.user.player.match is None:
         return HttpResponse(f'0: Player not in match')
-    hiders = request.user.player.match.player_set.filter(role="HI")
+    hiders = request.user.player.match.player_set.filter(role="HI", is_invisible=False)
 
     if hiders.count() == 0:
         return HttpResponse(f"2: You win! No hiders!")
