@@ -684,7 +684,7 @@ def check_if_hider_nearby(request, max_radius_m):
         return HttpResponse(f"2: You win! No hiders!")
 
     maxNearestHiderDistance = 10000000
-    nearestHider = hiders[0]
+    nearestHider = None
 
     for hider in hiders:
         distanceToHider = distance(hider.location, request.user.player.location).meters
@@ -692,7 +692,7 @@ def check_if_hider_nearby(request, max_radius_m):
             nearestHider = hider
             maxNearestHiderDistance = distanceToHider
 
-    if distance(nearestHider.location, request.user.player.location).meters < float(max_radius_m):
+    if distance(nearestHider.location, request.user.player.location).meters <= float(max_radius_m):
         return HttpResponse(f"1:{nearestHider.user.username}")
     else:
         return HttpResponse(f"0: No hiders around you!")
