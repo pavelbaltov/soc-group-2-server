@@ -303,6 +303,7 @@ def get_matches_nearby(request, radius):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
 
+    radius.replace(',','.')
     matches = [
         {
             "name": match.name,
