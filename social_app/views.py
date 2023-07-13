@@ -687,7 +687,7 @@ def check_if_hider_nearby(request, max_radius_m):
     nearestHider = hiders[0]
 
     for hider in hiders:
-        distanceToHider = Distance(hider.location, request.user.player.location).m
+        distanceToHider = distance(hider.location, request.user.player.location).meters
         if distanceToHider < maxNearestHiderDistance:
             nearestHider = hider
             maxNearestHiderDistance = distanceToHider
