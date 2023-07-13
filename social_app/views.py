@@ -542,8 +542,6 @@ def end_match(request):
 def match_ended(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'user not signed in')
-    if request.user.player.match is None:
-        return HttpResponse(f"0: There is no active match!")
 
     if request.user.player.match is None:
         return HttpResponse(f"1: Match was ended!")
