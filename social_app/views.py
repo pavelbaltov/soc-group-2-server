@@ -765,8 +765,7 @@ def clear_player(request):
     request.user.player.role = None
     match = Match.objects.filter(host=request.user.username)
     if match.exists():
-        if match.get().player_set.count() == 0:
-            match.delete()
+        match.delete()
 
     request.user.player.match = None
     request.user.player.ready = False

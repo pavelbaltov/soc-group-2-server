@@ -49,8 +49,8 @@ urlpatterns = [
     path('get_server_time/', views.get_server_time),
 
     path('check_if_caught/', views.check_if_caught),
-    path('catch_hider/<str:caught_player_username>', views.catch_hider),
-    path('check_if_hider_nearby/<str:max_radius_m>', views.check_if_hider_nearby),
+    path('catch_hider/<str:caught_player_username>/', views.catch_hider),
+    path('check_if_hider_nearby/<str:max_radius_m>/', views.check_if_hider_nearby),
 
     path('check_if_match_suddenly_ended/', views.check_if_match_suddenly_ended),
 
