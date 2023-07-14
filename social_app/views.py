@@ -774,8 +774,8 @@ def clear_player(request):
 
     match = Match.objects.filter(host=request.user.username)
     if match.exists():
-        if match.player_set.count() <= 1:
-            match.delete()
+        if match.get().player_set.count() <= 1:
+            match.get().delete()
 
     return HttpResponse(f'1: Player cleared')
 
