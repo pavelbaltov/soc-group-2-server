@@ -762,12 +762,13 @@ def clear_player(request):
     if request.user.player.match is None:
         return HttpResponse(f'0: Player not in match')
 
-    request.user.player.role = None
+
     match = Match.objects.filter(host=request.user.username)
     if match.exists():
-        if match.get().player_set.count() <= 1:
-            match.get().delete()
+        if match.first().player_set.count() <= 1:
+            match.first().delete()
 
+    request.user.player.role = None
     request.user.player.match = None
     request.user.player.ready = False
     request.user.player.is_caught = False
