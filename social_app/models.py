@@ -81,7 +81,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, blank=True,  null=True, choices=ROLE_CHOICES)
 
     ready = models.BooleanField(default=False)
-    is_loaded = models.BooleanField(default=False)
+    is_loaded = models.BooleanField(default=False, null=False)
     is_caught = models.BooleanField(default=False)
     is_invisible = models.BooleanField(default=False)
 
