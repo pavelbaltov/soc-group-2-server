@@ -763,11 +763,10 @@ def clear_player(request):
         return HttpResponse(f'0: Player not in match')
 
     request.user.player.role = None
-    match = request.user.player.match
-    for match in Match.objects.all():
-        if match.player_set is None:
+    match = Match.objects.filter(host=request.user.username)
+    if match is not None:
+        if match.player_set.count() == 0:
             match.delete()
-
 
     request.user.player.match = None
     request.user.player.ready = False
