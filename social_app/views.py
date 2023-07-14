@@ -441,6 +441,7 @@ def exit_match(request):
         request.user.player.ready = False
         request.user.player.is_caught = False
         request.user.player.is_invisible = False
+        request.user.player.is_loaded = False
         request.user.player.save()
         if match.player_set.count() == 0:
             match.delete()
@@ -533,6 +534,8 @@ def end_match(request):
         request.user.player.ready = False
         request.user.player.is_caught = False
         request.user.player.is_invisible = False
+        request.user.player.is_loaded = False
+
 
         request.user.player.save()
         return HttpResponse('1: Match ended successfully')
@@ -761,13 +764,15 @@ def clear_player(request):
 
     request.user.player.role = None
     match = request.user.player.match
-    if match is not None:
+    for match in Match.objects():
         if match.player_set.count() <= 1:
-            match.delete
+            match.delete()
+
     request.user.player.match = None
     request.user.player.ready = False
     request.user.player.is_caught = False
     request.user.player.is_invisible = False
+    request.user.player.is_loaded = False
     request.user.player.save()
 
     return HttpResponse(f'1: Player cleared')
