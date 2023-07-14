@@ -759,12 +759,12 @@ def clear_player(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'0: User not signed in')
 
-    try:
-        match = Match.objects.get(host=request.user.username)
-        if match.player_set.count() <= 1:
-            match.delete()
-    except Match.DoesNotExist:
-        return HttpResponse("0: Failed to find match", status=200)
+    # try:
+    #     match = Match.objects.get(host=request.user.username)
+    #     if match.player_set.count() <= 1:
+    #         match.delete()
+    # except Match.DoesNotExist:
+    #     return HttpResponse("0: Failed to find match", status=200)
 
 
 
