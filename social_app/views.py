@@ -760,6 +760,10 @@ def clear_player(request):
         return HttpResponse(f'0: Player not in match')
 
     request.user.player.role = None
+    match = request.user.player.match
+    if match is not None:
+        if match.player_set.count() <= 1:
+            match.delete
     request.user.player.match = None
     request.user.player.ready = False
     request.user.player.is_caught = False
