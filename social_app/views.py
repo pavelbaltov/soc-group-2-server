@@ -767,8 +767,6 @@ def clear_player(request):
     for match in Match.objects.all():
         if match.player_set is None:
             match.delete()
-    if match is not None:
-
 
 
     request.user.player.match = None
