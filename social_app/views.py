@@ -759,9 +759,6 @@ def clear_player(request):
     if not request.user.is_authenticated:
         return HttpResponse(f'0: User not signed in')
 
-    if request.user.player.match is None:
-        return HttpResponse(f'0: Player not in match')
-
     try:
         match = Match.objects.get(host=request.user.username)
         if match.player_set.count() <= 1:
