@@ -779,7 +779,7 @@ def is_loaded(request):
     if request.user.player.match is None:
         return HttpResponse(f'0: Player not in match')
 
-    request.user.player.is_loaded = None
+    request.user.player.is_loaded = True
     request.user.player.save()
     return HttpResponse(f'1: Player is loaded')
 
