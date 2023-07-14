@@ -39,6 +39,15 @@ class Match(models.Model):
                 return False
         return True
 
+    def all_loaded(self):
+        if self.player_set.count() < 2:
+            return False
+
+        for player in self.player_set.all():
+            if player.is_loaded is False:
+                return False
+        return True
+
     def get_average_friendship_experience(self):
         friendships = []
         for player1 in self.player_set.all():
@@ -72,6 +81,7 @@ class Player(models.Model):
     role = models.CharField(max_length=10, blank=True,  null=True, choices=ROLE_CHOICES)
 
     ready = models.BooleanField(default=False)
+    is_loaded = models.BooleanField(default=False)
     is_caught = models.BooleanField(default=False)
     is_invisible = models.BooleanField(default=False)
 

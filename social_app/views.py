@@ -752,4 +752,43 @@ def update_experience_with_friends(request, experience):
     request.user.player.save()
     return HttpResponse(f"1: Updated experience with friends!")
 
+def clear_player(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    request.user.player.role = None
+    request.user.player.match = None
+    request.user.player.ready = False
+    request.user.player.is_caught = False
+    request.user.player.is_invisible = False
+    request.user.player.save()
+
+    return HttpResponse(f'1: Player cleared')
+
+def is_loaded(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'0: User not signed in')
+
+    if request.user.player.match is None:
+        return HttpResponse(f'0: Player not in match')
+
+    request.user.player.is_loaded = None
+    request.user.player.save()
+    return HttpResponse(f'1: Player is loaded')
+
+
+def all_loaded(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(f'user not signed in')
+
+    if request.user.player.match.player_set.count() < 2:
+        return HttpResponse(f'0: Not enough players')
+
+    if request.user.player.match.all_loaded() is False:
+        return HttpResponse(f'0: Not all players are loaded')
+    else:
+        return HttpResponse(f'1: All players are loaded!')
 
